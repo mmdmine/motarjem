@@ -3,25 +3,22 @@ Motarjem is an offline sentence translator that
 uses NLP to parse and translate input English text to Persian, or vice versa.
 
 # Status
-Project is in early beta and it's not usable.
-
 * 'Noun + Verb' implemented
 * Noun can be multiple nouns connected by 'and' or 'or'
 * Noun can be plural by 's' postfix
-* an adjective can came before noun
+* an adjective can come before noun
 * a minimal vocabulary implemented
-* To Be Verbs implemented
-* 'Noun + to be + adjective' Implemented
+* 'Noun + to be + adjective' implemented
 * Determiners implemented
 * a verb can have object
-* a preposition can come between verb and object
+* a preposition can come after verb
 * sentences can be connected to each by 'and' or 'or'
 
 # To Do
-* a beautiful UI to be designed
+* an UI to be designed and implemented
 * Proper Nouns to be implemented
-* Questions to be implemented
 * Translator to be implemented
+* Questions to be implemented
 * qoutes to be implemented (e.g. He said Ali is clever or I think Ali is clever)
 * conditions to be implemented
 
