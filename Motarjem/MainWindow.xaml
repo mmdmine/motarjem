@@ -6,21 +6,19 @@
         xmlns:local="clr-namespace:Motarjem"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="25" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <TextBox Grid.Row="0" Name="input" Text="cat and dog are happy and I am programmer." Margin="5,2" />
-        <Button Grid.Row="0" HorizontalAlignment="Right" Content="Translate" Click="Button_Click" Margin="5,2" />
-        <FlowDocumentScrollViewer Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" IsToolBarVisible="True">
-            <FlowDocument Background="#FFFFFFE1" Name="output">
-                <Paragraph>
-                    <Run>Press</Run>
-                    <Run FontStyle="Italic">Translate</Run>
+    <StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBox Name="input" Text="cat and dog are happy and I am programmer." Margin="5,0" Width="400" />
+            <Button HorizontalAlignment="Right" Content="Translate" Margin="5,0" Click="Button_Click" />
+        </StackPanel>
+        <FlowDocumentPageViewer ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+            <FlowDocument PageHeight="270">
+                <Paragraph Name="output">
+                    <Run>Press </Run>
+                    <Run FontStyle="Italic">Translate </Run>
                     <Run>to Start...</Run>
                 </Paragraph>
             </FlowDocument>
-        </FlowDocumentScrollViewer>
-    </Grid>
+        </FlowDocumentPageViewer>
+    </StackPanel>
 </Window>
