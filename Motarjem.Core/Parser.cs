@@ -114,23 +114,45 @@ namespace Motarjem.Core
             var sentenceObject = false;
             if (enumerator.Current.IsVerb)
             {
-                var matches = Dictionary.LookupEn(enumerator.Current.english);
-                if (matches.Count() > 1)
-                {
-                    matches = from w in matches
+                var result = new Verb { word = enumerator.Current };
+                var matches = from w in Dictionary.LookupEn(enumerator.Current.english)
                               where w.person == person.person && w.count == person.count
                               select w;
-                }
-                output = new Verb
+                if (matches.Count() == 1)
                 {
-                    word = matches.Count() == 1 ? matches.SingleOrDefault() : enumerator.Current,
-                };
+                    result.word = matches.SingleOrDefault();
+                }
+                else if (matches.Count() > 1)
+                {
+                    // TODO: ?
+                }
+                else
+                {
+                    switch (person.person)
+                    {
+                        case Person.First:
+                            result.word.persian_verb_identifier = person.count == PersonCount.Singular ? "م" : "یم";
+                            break;
+                        case Person.Second:
+                            result.word.persian_verb_identifier = person.count == PersonCount.Singular ? "ی" : "ید";
+                            break;
+                        case Person.Third:
+                            result.word.persian_verb_identifier = person.count == PersonCount.Singular ?
+                                result.word.tense == VerbTense.Present ? "د" : ""
+                                : "ند";
+                            break;
+                    }
+                }
+                
                 if (enumerator.Current.pos == PartOfSpeech.ToBe)
                     toBe = true;
+
                 // TODO: After some verbs, sentence comes,
                 //  like 'said', 'think', ...
                 //  Ali said "This is great"
                 //  I think he is clever
+
+                output = result;
                 if (!enumerator.MoveNext())
                     return output;
             }
@@ -179,7 +201,10 @@ namespace Motarjem.Core
             if (np is Noun)
             {
                 var noun = np as Noun;
-                return new Word { count = noun.word.count, person = Person.Third };
+                return new Word {
+                    count = noun.word.count,
+                    person = noun.word.pos == PartOfSpeech.Pronoun ? noun.word.person : Person.Third,
+                };
             }
             if (np is DeterminerNoun)
             {
