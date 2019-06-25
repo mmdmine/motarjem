@@ -6,7 +6,19 @@
         xmlns:local="clr-namespace:Motarjem"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
-    </Grid>
+    <StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBox Name="input" Text="cat and dog are happy and I am programmer." Margin="5,0" Width="400" />
+            <Button HorizontalAlignment="Right" Content="Translate" Margin="5,0" Click="Button_Click" />
+        </StackPanel>
+        <FlowDocumentPageViewer ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+            <FlowDocument PageHeight="270">
+                <Paragraph Name="output">
+                    <Run>Press </Run>
+                    <Run FontStyle="Italic">Translate </Run>
+                    <Run>to Start...</Run>
+                </Paragraph>
+            </FlowDocument>
+        </FlowDocumentPageViewer>
+    </StackPanel>
 </Window>

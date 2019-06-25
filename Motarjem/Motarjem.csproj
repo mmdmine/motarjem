@@ -88,5 +88,11 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Motarjem.Core\Motarjem.Core.csproj">
+      <Project>{6e32c2b6-70ac-45df-b630-94064694cf2f}</Project>
+      <Name>Motarjem.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

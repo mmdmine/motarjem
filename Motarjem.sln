@@ -5,6 +5,13 @@ VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Motarjem", "Motarjem\Motarjem.csproj", "{975E933D-B18C-4424-9CCD-DECDBF69594F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{57F95D2C-6860-4A80-9F1A-94981BF3766E}"
+	ProjectSection(SolutionItems) = preProject
+		Readme.md = Readme.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Motarjem.Core", "Motarjem.Core\Motarjem.Core.csproj", "{6E32C2B6-70AC-45DF-B630-94064694CF2F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +22,10 @@ Global
 		{975E933D-B18C-4424-9CCD-DECDBF69594F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{975E933D-B18C-4424-9CCD-DECDBF69594F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{975E933D-B18C-4424-9CCD-DECDBF69594F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E32C2B6-70AC-45DF-B630-94064694CF2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E32C2B6-70AC-45DF-B630-94064694CF2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E32C2B6-70AC-45DF-B630-94064694CF2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E32C2B6-70AC-45DF-B630-94064694CF2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
