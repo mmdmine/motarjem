@@ -27,6 +27,7 @@ namespace Motarjem.Core
         {
             np.Display(display, language);
             vp.Display(display, language);
+
             display.Print(".");
             display.PrintSpace();
         }
@@ -41,7 +42,10 @@ namespace Motarjem.Core
         public override void Display(IDisplay display)
         {
             left.Display(display);
+
             display.Print(language == Language.English ? conj.english : conj.persian, FontColor.LightBlue);
+            display.PrintSpace();
+
             right.Display(display);
         }
     }

@@ -30,13 +30,13 @@ namespace Motarjem.Core
 
         protected override void DisplayEnglish(IDisplay display)
         {
-            if (word.pos == PartOfSpeech.ProperNoun)
-            {
-                display.Print(word.english, FontColor.Black, FontStyle.Bold);
-            }
-            else if (word.pos == PartOfSpeech.Pronoun)
+            if (word.pos == PartOfSpeech.Pronoun)
             {
                 display.Print(word.english, FontColor.Blue, FontStyle.Italic);
+            }
+            else if (word.pos == PartOfSpeech.ProperNoun)
+            {
+                display.Print(word.english, FontColor.Black, FontStyle.Bold);
             }
             else
             {
@@ -47,13 +47,13 @@ namespace Motarjem.Core
 
         protected override void DisplayPersian(IDisplay display)
         {
-            if (word.pos == PartOfSpeech.ProperNoun)
-            {
-                display.Print(word.persian, FontColor.Black, FontStyle.Bold);
-            }
-            else if (word.pos == PartOfSpeech.Pronoun)
+            if (word.pos == PartOfSpeech.Pronoun)
             {
                 display.Print(word.persian, FontColor.Blue, FontStyle.Italic);
+            }
+            else if(word.pos == PartOfSpeech.ProperNoun)
+            {
+                display.Print(word.persian, FontColor.Black, FontStyle.Bold);
             }
             else
             {
@@ -72,16 +72,16 @@ namespace Motarjem.Core
         {
             display.Print(determiner.english, FontColor.LightBlue);
             display.PrintSpace();
+
             right.Display(display, Language.English);
-            display.PrintSpace();
         }
 
         protected override void DisplayPersian(IDisplay display)
         {
             display.Print(determiner.persian, FontColor.LightBlue);
             display.PrintSpace();
+
             right.Display(display, Language.Persian);
-            display.PrintSpace();
         }
     }
 
@@ -94,21 +94,21 @@ namespace Motarjem.Core
         protected override void DisplayEnglish(IDisplay display)
         {
             left.Display(display, Language.English);
-            display.PrintSpace();
+
             display.Print(conjunction.english, FontColor.Gray);
             display.PrintSpace();
+
             right.Display(display, Language.English);
-            display.PrintSpace();
         }
 
         protected override void DisplayPersian(IDisplay display)
         {
             left.Display(display, Language.Persian);
-            display.PrintSpace();
+
             display.Print(conjunction.persian, FontColor.Gray);
             display.PrintSpace();
+
             right.Display(display, Language.Persian);
-            display.PrintSpace();
         }
     }
 
@@ -121,14 +121,14 @@ namespace Motarjem.Core
         {
             display.Print(adjective.english, FontColor.LightRed);
             display.PrintSpace();
+
             right.Display(display, Language.English);
-            display.PrintSpace();
         }
 
         protected override void DisplayPersian(IDisplay display)
         {
             right.Display(display, Language.Persian);
-            display.PrintSpace();
+
             display.Print(adjective.persian, FontColor.LightRed);
             display.PrintSpace();
         }
@@ -145,6 +145,7 @@ namespace Motarjem.Core
         protected override void DisplayEnglish(IDisplay display)
         {
             display.Print(word.english, FontColor.Green);
+            display.PrintSpace();
         }
 
         protected override void DisplayPersian(IDisplay display)
@@ -154,7 +155,7 @@ namespace Motarjem.Core
                 display.Print(word.persian_2, FontColor.Green);
             if (!string.IsNullOrWhiteSpace(word.persian_verb_identifier))
                 display.Print(word.persian_verb_identifier, FontColor.Green);
-            display.Print(" ", FontColor.Green);
+            display.PrintSpace();
         }
     }
 
@@ -166,7 +167,9 @@ namespace Motarjem.Core
         protected override void DisplayEnglish(IDisplay display)
         {
             action.Display(display, Language.English);
+
             display.Print(preposition.english, FontColor.LightGreen);
+            display.PrintSpace();
         }
 
         protected override void DisplayPersian(IDisplay display)
@@ -189,7 +192,10 @@ namespace Motarjem.Core
         protected override void DisplayPersian(IDisplay display)
         {
             objectNoun.Display(display, Language.Persian);
-            display.Print("را ", FontColor.Gray);
+
+            display.Print("را", FontColor.Gray);
+            display.PrintSpace();
+
             action.Display(display, Language.Persian);
         }
     }
@@ -202,12 +208,16 @@ namespace Motarjem.Core
         protected override void DisplayEnglish(IDisplay display)
         {
             toBe.Display(display, Language.English);
+
             display.Print(status.english, FontColor.LightRed, FontStyle.Italic);
+            display.PrintSpace();
         }
 
         protected override void DisplayPersian(IDisplay display)
         {
             display.Print(status.persian, FontColor.LightRed);
+            display.PrintSpace();
+
             toBe.Display(display, Language.Persian);
         }
     }
