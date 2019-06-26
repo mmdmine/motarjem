@@ -247,7 +247,7 @@ namespace Motarjem.Core
         {
             // TODO: if + S1 + ',' + S2
             // Simple Sentence: Noun Phrase + Verb Phrase
-            var sentence = new SimpleSentence();
+            var sentence = new SimpleSentence { language = Language.English };
             sentence.np = GetNextNounPhrase(enumerator);
             sentence.vp = GetNextVerbPhrase(enumerator, FindSubject(sentence.np));
             // Conjunction Sentence: S1 + and + S2
