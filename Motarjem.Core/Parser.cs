@@ -69,6 +69,7 @@ namespace Motarjem.Core
 
         private static NounPhrase GetNextNounPhrase(IEnumerator<Word> enumerator)
         {
+            // TODO: reimplement this
             NounPhrase output;
             if (enumerator.Current.IsNoun)
             {
@@ -117,11 +118,13 @@ namespace Motarjem.Core
             {
                 var verb = new Verb();
                 // Personality
+                // lookup for special verbs
                 var matches = from v in Dictionary.LookupVerbEn(enumerator.Current.english)
                               where v.person == person.person && v.count == person.count
                               select v;
                 if (matches.Count() == 1)
                 {
+                    // exactly one match
                     verb.word = matches.SingleOrDefault();
                 }
                 else if (matches.Count() > 1)
@@ -130,6 +133,7 @@ namespace Motarjem.Core
                 }
                 else
                 {
+                    // generate Persian Verb
                     verb.word = enumerator.Current;
                     verb.word.persian_verb_identifier = FindPersianIdentifier();
 
@@ -175,24 +179,29 @@ namespace Motarjem.Core
                 // Tense
                 if (verb.word.pos == PartOfSpeech.ToBe)
                 {
+                    // Noun + To Be + Adjective/Noun
                     verb.tense = VerbPhraseTense.Subjective;
                 }
                 else if (verb.word.tense == VerbTense.Present)
                 {
+                    // Noun + Verb
                     verb.tense = VerbPhraseTense.SimplePresent;
                 }
                 else if (verb.word.tense == VerbTense.Past)
                 {
+                    // Noun + Past Verb
                     verb.tense = VerbPhraseTense.SimplePast;
                 }
                 else
                 {
+                    // Undefined Grammer
                     throw new GrammerError(enumerator.Current.english);
                 }
 
                 // Object
                 if (!enumerator.MoveNext())
-                    return verb;
+                    return verb; // no more words left for object.
+
                 if (verb.tense == VerbPhraseTense.Subjective
                     && (enumerator.Current.IsNoun 
                     || enumerator.Current.pos == PartOfSpeech.Determiner
