@@ -11,38 +11,25 @@ namespace Motarjem.Core
         Persian,
     };
 
-    public class Sentence
+    public abstract class Sentence
     {
         public Language language;
 
-        public void Display(IDisplay display)
-        {
-            if (this is ConjSentence)
-            {
-                var conj = this as ConjSentence;
-                conj.left.Display(display);
-                display.Print(language == Language.English ? conj.conj.english : conj.conj.persian, FontColor.LightBlue);
-                conj.right.Display(display);
-            }
-            else if (this is SimpleSentence)
-            {
-                var ss = this as SimpleSentence;
-                ss.np.Display(display, language);
-                ss.vp.Display(display, language);
-                display.Print(".");
-                display.PrintSpace();
-            }
-            else
-            {
-                display.Print("Undefined Sentence: " + GetType().FullName, FontColor.Red);
-            }
-        }
+        public abstract void Display(IDisplay display);
     }
 
     public class SimpleSentence : Sentence
     {
         public NounPhrase np;
         public VerbPhrase vp;
+
+        public override void Display(IDisplay display)
+        {
+            np.Display(display, language);
+            vp.Display(display, language);
+            display.Print(".");
+            display.PrintSpace();
+        }
     }
 
     public class ConjSentence : Sentence
@@ -50,5 +37,12 @@ namespace Motarjem.Core
         public Sentence left;
         public Word conj;
         public Sentence right;
+
+        public override void Display(IDisplay display)
+        {
+            left.Display(display);
+            display.Print(language == Language.English ? conj.english : conj.persian, FontColor.LightBlue);
+            right.Display(display);
+        }
     }
 }
