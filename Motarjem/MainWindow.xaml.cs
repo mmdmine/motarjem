@@ -28,20 +28,20 @@ namespace Motarjem
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             output.Blocks.Clear();
-            var eng = new Paragraph();
+            var en = new Paragraph();
             var fa = new Paragraph { FlowDirection = FlowDirection.RightToLeft };
-            output.Blocks.Add(eng);
-            output.Blocks.Add(fa);
-            EnglishDump.SetOutput(eng.Inlines);
-            PersianDump.SetOutput(fa.Inlines);
+            var en_display = new Display(en.Inlines);
+            var fa_display = new Display(fa.Inlines);
             try
             {
                 var sentences = Parser.ParseEnglish(Token.Tokenize(input.Text));
                 foreach (var s in sentences)
                 {
-                    PersianDump.DumpSentence(Translator.Translate(s));
-                    EnglishDump.DumpSentence(s);
+                    s.Display(en_display);
+                    Translator.Translate(s).Display(fa_display);
                 }
+                output.Blocks.Add(en);
+                output.Blocks.Add(fa);
             }
             catch (MotarjemException ex)
             {
