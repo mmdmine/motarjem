@@ -100,7 +100,7 @@ namespace Motarjem.Core
             {
                 throw new UnexpectedWord(enumerator.Current.english);
             }
-            if (enumerator.Current.pos == PartOfSpeech.Conjunction)
+            if (enumerator.Current?.pos == PartOfSpeech.Conjunction)
             {
                 var result = new ConjNoun { left = output, conjunction = enumerator.Current };
                 if (!enumerator.MoveNext())
@@ -113,91 +113,113 @@ namespace Motarjem.Core
 
         private static VerbPhrase GetNextVerbPhrase(IEnumerator<Word> enumerator, Word person)
         {
-            VerbPhrase output;
-            var toBe = false;
-            var sentenceObject = false;
             if (enumerator.Current.IsVerb)
             {
-                var result = new Verb { word = enumerator.Current };
-                var matches = from w in Dictionary.LookupEn(enumerator.Current.english)
-                              where w.person == person.person && w.count == person.count
-                              select w;
+                var verb = new Verb();
+                // Personality
+                var matches = from v in Dictionary.LookupVerbEn(enumerator.Current.english)
+                              where v.person == person.person && v.count == person.count
+                              select v;
                 if (matches.Count() == 1)
                 {
-                    result.word = matches.SingleOrDefault();
+                    verb.word = matches.SingleOrDefault();
                 }
                 else if (matches.Count() > 1)
                 {
-                    // TODO: ?
+                    // TODO?
                 }
                 else
                 {
-                    switch (person.person)
+                    verb.word = enumerator.Current;
+                    verb.word.persian_verb_identifier = FindPersianIdentifier();
+
+                    string FindPersianIdentifier()
                     {
-                        case Person.First:
-                            result.word.persian_verb_identifier = person.count == PersonCount.Singular ? "م" : "یم";
-                            break;
-                        case Person.Second:
-                            result.word.persian_verb_identifier = person.count == PersonCount.Singular ? "ی" : "ید";
-                            break;
-                        case Person.Third:
-                            result.word.persian_verb_identifier = person.count == PersonCount.Singular ?
-                                (result.word.tense == VerbTense.Present ? "د" : "")
-                                : "ند";
-                            break;
+                        if (person.count == PersonCount.Singular)
+                        {
+                            switch (person.person)
+                            {
+                                default:
+                                case Person.All:
+                                    throw new Exception(); // TODO?
+                                case Person.First:
+                                    return "م";
+                                case Person.Second:
+                                    return "ی";
+                                case Person.Third:
+                                    return verb.word.tense == VerbTense.Present ? "د" : "";
+                            }
+                        }
+                        else if (person.count == PersonCount.Plural)
+                        {
+                            switch (person.person)
+                            {
+                                default:
+                                case Person.All:
+                                    throw new Exception(); // TODO?
+                                case Person.First:
+                                    return "یم";
+                                case Person.Second:
+                                    return "ید";
+                                case Person.Third:
+                                    return "ند";
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception(); // TODO?
+                        }
                     }
                 }
-                
-                if (enumerator.Current.pos == PartOfSpeech.ToBe)
-                    toBe = true;
 
-                // TODO: After some verbs, sentence comes,
-                //  like 'said', 'think', ...
-                //  Ali said "This is great"
-                //  I think he is clever
+                // Tense
+                if (verb.word.pos == PartOfSpeech.ToBe)
+                {
+                    verb.tense = VerbPhraseTense.Subjective;
+                }
+                else if (verb.word.tense == VerbTense.Present)
+                {
+                    verb.tense = VerbPhraseTense.SimplePresent;
+                }
+                else if (verb.word.tense == VerbTense.Past)
+                {
+                    verb.tense = VerbPhraseTense.SimplePast;
+                }
+                else
+                {
+                    throw new GrammerError(enumerator.Current.english);
+                }
 
-                output = result;
+                // Object
                 if (!enumerator.MoveNext())
-                    return output;
+                    return verb;
+                if (verb.tense == VerbPhraseTense.Subjective
+                    && (enumerator.Current.IsNoun 
+                    || enumerator.Current.pos == PartOfSpeech.Determiner
+                    || enumerator.Current.pos == PartOfSpeech.Adjective))
+                {
+                    return new SubjectiveVerb
+                    {
+                        toBe = verb,
+                        status = GetNextNounPhrase(enumerator)
+                    };
+                }
+                else if (enumerator.Current.IsNoun 
+                    || enumerator.Current.pos == PartOfSpeech.Determiner)
+                {
+                    return new ObjectiveVerb
+                    {
+                        action = verb,
+                        objectNoun = GetNextNounPhrase(enumerator)
+                    };
+                }
+
+                return verb;
             }
             else
             {
                 throw new UnexpectedWord(enumerator.Current.english);
             }
-            if (toBe)
-            {
-                if (enumerator.Current.pos == PartOfSpeech.Adjective ||
-                    enumerator.Current.IsNoun)
-                {
-                    output = new SubjectiveVerb { toBe = output, status = GetNextNounPhrase(enumerator) };
-                    //if (!enumerator.MoveNext())
-                        //return output;
-                }
-                // TODO: tenses uses 'to be + verb'
-                else
-                {
-                    throw new UnexpectedWord(enumerator.Current.english);
-                }
-            }
-            else if (enumerator.Current.IsNoun)
-            {
-                if (sentenceObject)
-                {
-                    // TODO: parse next sentence as object
-                    throw new NotImplementedException();
-                }
-                else
-                {
-                    output = new ObjectiveVerb { action = output, objectNoun = GetNextNounPhrase(enumerator) };
-                }
-            }
-            else if (enumerator.Current.pos == PartOfSpeech.Preposition)
-            {
-                output = new PhrasalVerb { action = output, preposition = enumerator.Current };
-                if (!enumerator.MoveNext())
-                    return output;
-            }
-            return output;
         }
 
         private static Word FindSubject(NounPhrase np)
