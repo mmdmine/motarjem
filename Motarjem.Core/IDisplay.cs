@@ -2,10 +2,14 @@
 {
     public enum FontColor
     {
-        Black, Gray,
-        Red, LightRed,
-        Blue, LightBlue,
-        Green, LightGreen,
+        Red,        // Error
+        Black,      // Noun
+        Blue,       // Pronoun
+        Green,      // Verb
+        LightRed,   // Adjective
+        LightGreen, // Preposition
+        LightBlue,  // Determiner
+        Gray,       // Conjunction
     }
 
     public enum FontStyle

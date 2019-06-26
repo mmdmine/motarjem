@@ -134,6 +134,13 @@ namespace Motarjem.Core
         }
     }
 
+    public enum VerbPhraseTense
+    {
+        Subjective,
+        SimplePresent,
+        SimplePast,
+    }
+
     public abstract class VerbPhrase : Phrase
     {
     }
@@ -141,6 +148,7 @@ namespace Motarjem.Core
     public class Verb : VerbPhrase
     {
         public Word word;
+        public VerbPhraseTense tense;
 
         protected override void DisplayEnglish(IDisplay display)
         {
@@ -150,9 +158,16 @@ namespace Motarjem.Core
 
         protected override void DisplayPersian(IDisplay display)
         {
+            if (tense == VerbPhraseTense.SimplePresent &&
+                string.IsNullOrWhiteSpace(word.persian_2))
+                display.Print("می", FontColor.Green);
             display.Print(word.persian, FontColor.Green);
             if (!string.IsNullOrWhiteSpace(word.persian_2))
+            {
+                if (tense == VerbPhraseTense.SimplePresent)
+                    display.Print("می", FontColor.Green);
                 display.Print(word.persian_2, FontColor.Green);
+            }
             if (!string.IsNullOrWhiteSpace(word.persian_verb_identifier))
                 display.Print(word.persian_verb_identifier, FontColor.Green);
             display.PrintSpace();

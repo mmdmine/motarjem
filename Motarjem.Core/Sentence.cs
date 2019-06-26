@@ -43,7 +43,7 @@ namespace Motarjem.Core
         {
             left.Display(display);
 
-            display.Print(language == Language.English ? conj.english : conj.persian, FontColor.LightBlue);
+            display.Print(language == Language.English ? conj.english : conj.persian, FontColor.Gray);
             display.PrintSpace();
 
             right.Display(display);
