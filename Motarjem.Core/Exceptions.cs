@@ -38,4 +38,12 @@ namespace Motarjem.Core
         {
         }
     }
+
+    public class GrammerError : MotarjemException
+    {
+        public GrammerError(string word) :
+            base($"Grammer Error at '{word}'", $"خطای گرامری در '{word}'")
+        {
+        }
+    }
 }
