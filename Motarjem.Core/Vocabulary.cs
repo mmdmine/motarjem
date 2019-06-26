@@ -312,42 +312,49 @@
             new Word
             {
                 pos = PartOfSpeech.Noun,
+                count = PersonCount.Singular,
                 english = "programmer",
                 persian = "برنامه‌نویس"
             },
             new Word
             {
                 pos = PartOfSpeech.Noun,
+                count = PersonCount.Singular,
                 english = "cat",
                 persian = "گربه"
             },
             new Word
             {
                 pos = PartOfSpeech.Noun,
+                count = PersonCount.Singular,
                 english = "dog",
                 persian = "سگ"
             },
             new Word
             {
                 pos = PartOfSpeech.Noun,
+                count = PersonCount.Singular,
                 english = "butterfly",
                 persian = "پروانه"
             },
             new Word
             {
                 pos = PartOfSpeech.Noun,
+                count = PersonCount.Singular,
                 english = "fish",
                 persian = "ماهی",
             },
             new Word
             {
                 pos = PartOfSpeech.Noun,
+                count = PersonCount.Singular,
                 english = "book",
                 persian = "کتاب",
             },
             new Word
             {
                 pos = PartOfSpeech.Noun,
+                count = PersonCount.Singular,
                 english = "pen",
                 persian = "مداد",
             },
