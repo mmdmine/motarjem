@@ -25,7 +25,7 @@ namespace Motarjem
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Translate(object sender, RoutedEventArgs e)
         {
             output.Blocks.Clear();
             var en = new Paragraph();
