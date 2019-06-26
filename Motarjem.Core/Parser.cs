@@ -87,9 +87,13 @@ namespace Motarjem.Core
             else if (enumerator.Current.pos == PartOfSpeech.Adjective)
             {
                 var adj = new AdjectiveNoun { adjective = enumerator.Current };
-                if (!enumerator.MoveNext())
-                    throw new UnexpectedEnd();
-                adj.right = GetNextNounPhrase(enumerator);
+                if (enumerator.MoveNext() &&
+                    (enumerator.Current.IsNoun || enumerator.Current.pos == PartOfSpeech.Adjective))
+                    adj.right = GetNextNounPhrase(enumerator);
+                else
+                    return adj; // This don't let you to use 'and' between adjectives
+                                // like 'Ali is smart and clever'
+                                // but need to parse 'Ali is smart and Reza is clever' correctly
                 output = adj;
             }
             else
@@ -138,7 +142,7 @@ namespace Motarjem.Core
                             break;
                         case Person.Third:
                             result.word.persian_verb_identifier = person.count == PersonCount.Singular ?
-                                result.word.tense == VerbTense.Present ? "د" : ""
+                                (result.word.tense == VerbTense.Present ? "د" : "")
                                 : "ند";
                             break;
                     }
@@ -165,9 +169,9 @@ namespace Motarjem.Core
                 if (enumerator.Current.pos == PartOfSpeech.Adjective ||
                     enumerator.Current.IsNoun)
                 {
-                    output = new SubjectiveVerb { toBe = output, status = enumerator.Current };
-                    if (!enumerator.MoveNext())
-                        return output;
+                    output = new SubjectiveVerb { toBe = output, status = GetNextNounPhrase(enumerator) };
+                    //if (!enumerator.MoveNext())
+                        //return output;
                 }
                 // TODO: tenses uses 'to be + verb'
                 else

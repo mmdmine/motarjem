@@ -122,12 +122,12 @@ namespace Motarjem.Core
             display.Print(adjective.english, FontColor.LightRed);
             display.PrintSpace();
 
-            right.Display(display, Language.English);
+            right?.Display(display, Language.English);
         }
 
         protected override void DisplayPersian(IDisplay display)
         {
-            right.Display(display, Language.Persian);
+            right?.Display(display, Language.Persian);
 
             display.Print(adjective.persian, FontColor.LightRed);
             display.PrintSpace();
@@ -203,20 +203,22 @@ namespace Motarjem.Core
     public class SubjectiveVerb : VerbPhrase
     {
         public VerbPhrase toBe;
-        public Word status;
+        public NounPhrase status;
 
         protected override void DisplayEnglish(IDisplay display)
         {
             toBe.Display(display, Language.English);
 
-            display.Print(status.english, FontColor.LightRed, FontStyle.Italic);
-            display.PrintSpace();
+            //display.Print(status.english, FontColor.LightRed, FontStyle.Italic);
+            //display.PrintSpace();
+            status.Display(display, Language.English);
         }
 
         protected override void DisplayPersian(IDisplay display)
         {
-            display.Print(status.persian, FontColor.LightRed);
-            display.PrintSpace();
+            //display.Print(status.persian, FontColor.LightRed);
+            //display.PrintSpace();
+            status.Display(display, Language.Persian);
 
             toBe.Display(display, Language.Persian);
         }
