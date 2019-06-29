@@ -320,6 +320,13 @@
             {
                 pos = PartOfSpeech.Noun,
                 count = PersonCount.Singular,
+                english = "program",
+                persian = "برنامه",
+            },
+            new Word
+            {
+                pos = PartOfSpeech.Noun,
+                count = PersonCount.Singular,
                 english = "cat",
                 persian = "گربه"
             },

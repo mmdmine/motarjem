@@ -33,6 +33,10 @@ namespace Motarjem.Core
                     throw new NotImplementedException();
                     // words.Clear();
                 }
+                else if (tokens.Peek().type == Token.Type.Space)
+                {
+                    tokens.Dequeue();
+                }
                 else
                 {
                     var query = GetNextWord(tokens);
@@ -108,8 +112,6 @@ namespace Motarjem.Core
                         if (words.Any()
                             && words.Peek().IsNoun)
                             adj.right = GetNextNounPhrase(words, true);
-                        else
-                            return adj; // temporary fix for 'Noun + Conj. + Noun' TODO
                         result = adj;
                         break;
                     }
@@ -129,7 +131,8 @@ namespace Motarjem.Core
                 words.Peek().pos == PartOfSpeech.Conjunction &&
                 !child)
             {
-                // TODO: break if conjunction is between two sentences
+                // TODO: Ambigous:
+                // [Ali wrote [books and letters]] and [Reza read them].
                 var conj = new ConjNoun { left = result };
                 conj.conjunction = words.Dequeue();
                 conj.right = GetNextNounPhrase(words, true);
