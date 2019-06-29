@@ -5,16 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Motarjem"
         mc:Ignorable="d"
-        Background="#E1F5FE"
+        Background="#BBDEFB"
         Title="Motarjem" Height="350" Width="525">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBox Grid.Row="0" Name="input" Text="cat and butterflies are happy. I am a program." Margin="5,2" />
-        <Button Grid.Row="0" HorizontalAlignment="Right" Content="Translate" Margin="5,2" Click="Translate" />
-        <FlowDocumentScrollViewer Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" IsToolBarVisible="True">
+        <TextBox Grid.Row="0"
+                 Name="input" Text="cat and butterflies are happy. I am a program."
+                 Margin="5,2" Background="#E3F2FD" BorderBrush="#90CAF9" />
+        <Button Grid.Row="0" 
+                HorizontalAlignment="Right" 
+                Content="Translate" Click="Translate" Cursor="Hand"
+                Margin="5,2" Background="#BBDEFB" Foreground="#0D47A1" BorderBrush="#90CAF9" />
+        <FlowDocumentScrollViewer Grid.Row="1" 
+                                  ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                                  ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                                  IsToolBarVisible="True">
             <FlowDocument Name="output">
                 <Paragraph>
                     <Run>Press</Run>
