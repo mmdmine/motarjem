@@ -9,112 +9,107 @@ namespace Motarjem.Core
 {
     public static class Parser
     {
-        public static IEnumerable<Sentence> ParseEnglish(IEnumerable<Token> tokens)
+        public static IEnumerable<Sentence> ParseEnglish(IEnumerable<Token> tokens_enum)
         {
-            var result = new List<Sentence>();
-            var words = new List<Word>();
-            var tokenEnum = tokens.GetEnumerator();
-            if (!tokenEnum.MoveNext())
-                return result;
-            while (tokenEnum.Current != null)
+            var tokens = new Queue<Token>(tokens_enum);
+            var words = new Queue<Word>();
+            while (tokens.Any())
             {
-                var moveNext = true;
-                if (tokenEnum.Current.type == Token.Type.Dot)
+                if (tokens.Peek().type == Token.Type.Dot)
                 {
-                    var wordEnum = words.GetEnumerator();
-                    wordEnum.MoveNext();
-                    result.Add(GetNextSentence(wordEnum));
+                    tokens.Dequeue();
+                    yield return GetNextSentence(words);
                     words.Clear();
                 }
-                else if (tokenEnum.Current.type == Token.Type.QuestionMark)
+                else if (tokens.Peek().type == Token.Type.QuestionMark)
                 {
+                    tokens.Dequeue();
                     throw new NotImplementedException();
                     // words.Clear();
                 }
-                else if (tokenEnum.Current.type == Token.Type.Exclamation)
+                else if (tokens.Peek().type == Token.Type.Exclamation)
                 {
+                    tokens.Dequeue();
                     throw new NotImplementedException();
                     // words.Clear();
                 }
                 else
                 {
-                    var query = GetNextWord(tokenEnum);
+                    var query = GetNextWord(tokens);
                     var matches = Dictionary.LookupEn(query);
                     if (!matches.Any())
                         throw new UndefinedWord(query);
-                    words.Add(matches.First());
-                    if (tokenEnum.Current?.type != Token.Type.Space)
-                        moveNext = false;
+                    words.Enqueue(matches.First());
                 }
-                if (moveNext)
-                    tokenEnum.MoveNext();
             }
-            return result;
         }
 
-        private static string GetNextWord(IEnumerator<Token> enumerator)
+        private static string GetNextWord(Queue<Token> tokens)
         {
             var str = new StringBuilder();
-            while (enumerator.Current != null)
+            while (tokens.Any())
             {
-                if (enumerator.Current.type == Token.Type.Alphabet ||
-                    enumerator.Current.type == Token.Type.Digit)
-                    str.Append(enumerator.Current.charactor);
+                if (tokens.Peek().type == Token.Type.Alphabet ||
+                    tokens.Peek().type == Token.Type.Digit)
+                    str.Append(tokens.Dequeue().charactor);
                 else
+                {
+                    if (tokens.Peek().type == Token.Type.Space)
+                        tokens.Dequeue();
                     break;
-                enumerator.MoveNext();
+                }
             }
             return str.ToString();
         }
 
-        private static Sentence GetNextSentence(IEnumerator<Word> enumerator)
+        private static Sentence GetNextSentence(Queue<Word> words)
         {
             // TODO: if + S1 + ',' + S2
             // Simple Sentence: Noun Phrase + Verb Phrase
             var sentence = new SimpleSentence { language = Language.English };
-            sentence.np = GetNextNounPhrase(enumerator);
-            sentence.vp = GetNextVerbPhrase(enumerator, FindSubject(sentence.np));
+            sentence.np = GetNextNounPhrase(words);
+            sentence.vp = GetNextVerbPhrase(words, FindSubject(sentence.np));
             // Conjunction Sentence: S1 + and + S2
-            if (enumerator.Current?.pos == PartOfSpeech.Conjunction)
+            if (words.Any() && words.Peek().pos == PartOfSpeech.Conjunction)
             {
-                var conj = new ConjSentence { conj = enumerator.Current, left = sentence };
-                if (!enumerator.MoveNext())
-                    return sentence;
-                conj.right = GetNextSentence(enumerator);
+                var conj = new ConjSentence
+                {
+                    left = sentence,
+                    conj = words.Dequeue(),
+                };
+                conj.right = GetNextSentence(words);
                 return conj;
             }
-
-            if (enumerator.MoveNext())
-                throw new UnexpectedWord(enumerator.Current.english);
-
+            if (words.Any())
+                throw new UnexpectedWord(words.Dequeue().english);
             return sentence;
         }
 
-        private static NounPhrase GetNextNounPhrase(IEnumerator<Word> enumerator, bool child = false)
+        private static NounPhrase GetNextNounPhrase(Queue<Word> words, bool child = false)
         {
             NounPhrase result;
-            switch (enumerator.Current.pos)
+            switch (words.Peek().pos)
             {
                 // Det. + Noun e.g. the book
                 case PartOfSpeech.Determiner:
                     {
                         var det = new DeterminerNoun
                         {
-                            determiner = enumerator.Current,
+                            determiner = words.Dequeue(),
                         };
-                        if (!enumerator.MoveNext())
-                            throw new UnexpectedEnd();
-                        det.right = GetNextNounPhrase(enumerator, true);
+                        det.right = GetNextNounPhrase(words, true);
                         result = det;
                         break;
                     }
                 // Adjective + Noun e.g. small book
                 case PartOfSpeech.Adjective:
                     {
-                        var adj = new AdjectiveNoun { adjective = enumerator.Current };
-                        if (enumerator.MoveNext()
-                            && enumerator.Current.IsNoun)
-                            adj.right = GetNextNounPhrase(enumerator, true);
+                        var adj = new AdjectiveNoun { adjective = words.Dequeue() };
+                        if (words.Any()
+                            && words.Peek().IsNoun)
+                            adj.right = GetNextNounPhrase(words, true);
+                        else
+                            return adj; // temporary fix for 'Noun + Conj. + Noun' TODO
                         result = adj;
                         break;
                     }
@@ -123,55 +118,34 @@ namespace Motarjem.Core
                 case PartOfSpeech.ProperNoun:
                     result = new Noun
                     {
-                        word = enumerator.Current
+                        word = words.Dequeue()
                     };
-                    enumerator.MoveNext();
                     break;
                 default:
-                    throw new UnexpectedWord(enumerator.Current.english);
+                    throw new UnexpectedWord(words.Dequeue().english);
             }
             // Noun + Conj. + Noun e.g. Ali and Reza
-            if (enumerator.Current?.pos == PartOfSpeech.Conjunction && !child)
+            if (words.Any() && 
+                words.Peek().pos == PartOfSpeech.Conjunction &&
+                !child)
             {
-                var conj = new ConjNoun
-                {
-                    left = result,
-                    conjunction = enumerator.Current,
-                };
-                if (!enumerator.MoveNext())
-                    throw new UnexpectedEnd();
-                if (!isSentence())
-                {
-                    conj.right = GetNextNounPhrase(enumerator, true);
-                    result = conj;
-                }
-
-                bool isSentence()
-                {
-                    // This doesn't copies the enumerator
-                    var clone = enumerator;
-                    try
-                    {
-                        GetNextSentence(clone);
-                        return true;
-                    }
-                    catch (Exception)
-                    {
-                        return false;
-                    }
-                }
+                // TODO: break if conjunction is between two sentences
+                var conj = new ConjNoun { left = result };
+                conj.conjunction = words.Dequeue();
+                conj.right = GetNextNounPhrase(words, true);
+                result = conj;
             }
             return result;
         }
 
-        private static VerbPhrase GetNextVerbPhrase(IEnumerator<Word> enumerator, Word person)
+        private static VerbPhrase GetNextVerbPhrase(Queue<Word> words, Word person)
         {
-            if (enumerator.Current.IsVerb)
+            if (words.Peek().IsVerb)
             {
-                var verb = new Verb();
+                var verb = new Verb { word = words.Dequeue() };
                 // Personality
                 // lookup for special verbs
-                var matches = from v in Dictionary.LookupVerbEn(enumerator.Current.english)
+                var matches = from v in Dictionary.LookupVerbEn(verb.word.english)
                               where v.person == person.person && v.count == person.count
                               select v;
                 if (matches.Count() == 1)
@@ -186,7 +160,6 @@ namespace Motarjem.Core
                 else
                 {
                     // generate Persian Verb
-                    verb.word = enumerator.Current;
                     verb.word.persian_verb_identifier = FindPersianIdentifier();
 
                     string FindPersianIdentifier()
@@ -247,31 +220,31 @@ namespace Motarjem.Core
                 else
                 {
                     // Undefined Grammer
-                    throw new GrammerError(enumerator.Current.english);
+                    throw new GrammerError(verb.word.english);
                 }
 
                 // Object
-                if (!enumerator.MoveNext())
+                if (!words.Any())
                     return verb; // no more words left for object.
 
                 if (verb.tense == VerbPhraseTense.Subjective
-                    && (enumerator.Current.IsNoun 
-                    || enumerator.Current.pos == PartOfSpeech.Determiner
-                    || enumerator.Current.pos == PartOfSpeech.Adjective))
+                    && (words.Peek().IsNoun 
+                    || words.Peek().pos == PartOfSpeech.Determiner
+                    || words.Peek().pos == PartOfSpeech.Adjective))
                 {
                     return new SubjectiveVerb
                     {
                         toBe = verb,
-                        status = GetNextNounPhrase(enumerator)
+                        status = GetNextNounPhrase(words)
                     };
                 }
-                else if (enumerator.Current.IsNoun 
-                    || enumerator.Current.pos == PartOfSpeech.Determiner)
+                else if (words.Peek().IsNoun 
+                    || words.Peek().pos == PartOfSpeech.Determiner)
                 {
                     return new ObjectiveVerb
                     {
                         action = verb,
-                        objectNoun = GetNextNounPhrase(enumerator)
+                        objectNoun = GetNextNounPhrase(words)
                     };
                 }
 
@@ -279,7 +252,7 @@ namespace Motarjem.Core
             }
             else
             {
-                throw new UnexpectedWord(enumerator.Current.english);
+                throw new UnexpectedWord(words.Dequeue().english);
             }
         }
 
@@ -295,7 +268,7 @@ namespace Motarjem.Core
             }
             if (np is DeterminerNoun)
             {
-                // TODO: 'a' or 'an' is singular, 'some' and ... are plural
+                // TODO: 'a' or 'an' are singular, 'some' and ... are plural
                 var dn = np as DeterminerNoun;
                 return FindSubject(dn.right);
             }
