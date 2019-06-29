@@ -15,35 +15,31 @@ namespace Motarjem.Core
             var words = new Queue<Word>();
             while (tokens.Any())
             {
-                if (tokens.Peek().type == Token.Type.Dot)
+                switch (tokens.Peek().type)
                 {
-                    tokens.Dequeue();
-                    yield return GetNextSentence(words);
-                    words.Clear();
-                }
-                else if (tokens.Peek().type == Token.Type.QuestionMark)
-                {
-                    tokens.Dequeue();
-                    throw new NotImplementedException();
-                    // words.Clear();
-                }
-                else if (tokens.Peek().type == Token.Type.Exclamation)
-                {
-                    tokens.Dequeue();
-                    throw new NotImplementedException();
-                    // words.Clear();
-                }
-                else if (tokens.Peek().type == Token.Type.Space)
-                {
-                    tokens.Dequeue();
-                }
-                else
-                {
-                    var query = GetNextWord(tokens);
-                    var matches = Dictionary.LookupEn(query);
-                    if (!matches.Any())
-                        throw new UndefinedWord(query);
-                    words.Enqueue(matches.First());
+                    case Token.Type.Dot:
+                        tokens.Dequeue();
+                        yield return GetNextSentence(words);
+                        words.Clear();
+                        break;
+                    case Token.Type.QuestionMark:
+                        tokens.Dequeue();
+                        throw new NotImplementedException();
+                    case Token.Type.Exclamation:
+                        tokens.Dequeue();
+                        throw new NotImplementedException();
+                    case Token.Type.Space:
+                        tokens.Dequeue();
+                        break;
+                    default:
+                        {
+                            var query = GetNextWord(tokens);
+                            var matches = Dictionary.LookupEn(query);
+                            if (!matches.Any())
+                                throw new UndefinedWord(query);
+                            words.Enqueue(matches.First());
+                            break;
+                        }
                 }
             }
         }
