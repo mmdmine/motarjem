@@ -57,7 +57,7 @@ namespace Motarjem.Core
             var str = new StringBuilder();
             while (enumerator.Current != null)
             {
-                if (enumerator.Current.type == Token.Type.Alphabet || 
+                if (enumerator.Current.type == Token.Type.Alphabet ||
                     enumerator.Current.type == Token.Type.Digit)
                     str.Append(enumerator.Current.charactor);
                 else
@@ -67,49 +67,101 @@ namespace Motarjem.Core
             return str.ToString();
         }
 
-        private static NounPhrase GetNextNounPhrase(IEnumerator<Word> enumerator)
+        private static Sentence GetNextSentence(IEnumerator<Word> enumerator)
         {
-            // TODO: reimplement this
-            NounPhrase output;
-            if (enumerator.Current.IsNoun)
-            {
-                output = new Noun { word = enumerator.Current };
-                if (!enumerator.MoveNext())
-                    return output;
-            }
-            else if (enumerator.Current.pos == PartOfSpeech.Determiner)
-            {
-                var dn = new DeterminerNoun { determiner = enumerator.Current };
-                if (!enumerator.MoveNext())
-                    throw new UnexpectedEnd();
-                dn.right = GetNextNounPhrase(enumerator);
-                output = dn;
-            }
-            else if (enumerator.Current.pos == PartOfSpeech.Adjective)
-            {
-                var adj = new AdjectiveNoun { adjective = enumerator.Current };
-                if (enumerator.MoveNext() &&
-                    (enumerator.Current.IsNoun || enumerator.Current.pos == PartOfSpeech.Adjective))
-                    adj.right = GetNextNounPhrase(enumerator);
-                else
-                    return adj; // This don't let you to use 'and' between adjectives
-                                // like 'Ali is smart and clever'
-                                // but need to parse 'Ali is smart and Reza is clever' correctly
-                output = adj;
-            }
-            else
-            {
-                throw new UnexpectedWord(enumerator.Current.english);
-            }
+            // TODO: if + S1 + ',' + S2
+            // Simple Sentence: Noun Phrase + Verb Phrase
+            var sentence = new SimpleSentence { language = Language.English };
+            sentence.np = GetNextNounPhrase(enumerator);
+            sentence.vp = GetNextVerbPhrase(enumerator, FindSubject(sentence.np));
+            // Conjunction Sentence: S1 + and + S2
             if (enumerator.Current?.pos == PartOfSpeech.Conjunction)
             {
-                var result = new ConjNoun { left = output, conjunction = enumerator.Current };
+                var conj = new ConjSentence { conj = enumerator.Current, left = sentence };
+                if (!enumerator.MoveNext())
+                    return sentence;
+                conj.right = GetNextSentence(enumerator);
+                return conj;
+            }
+
+            if (enumerator.MoveNext())
+                throw new UnexpectedWord(enumerator.Current.english);
+
+            return sentence;
+        }
+
+        private static NounPhrase GetNextNounPhrase(IEnumerator<Word> enumerator, bool child = false)
+        {
+            NounPhrase result;
+            switch (enumerator.Current.pos)
+            {
+                // Det. + Noun e.g. the book
+                case PartOfSpeech.Determiner:
+                    {
+                        var det = new DeterminerNoun
+                        {
+                            determiner = enumerator.Current,
+                        };
+                        if (!enumerator.MoveNext())
+                            throw new UnexpectedEnd();
+                        det.right = GetNextNounPhrase(enumerator, true);
+                        result = det;
+                        break;
+                    }
+                // Adjective + Noun e.g. small book
+                case PartOfSpeech.Adjective:
+                    {
+                        var adj = new AdjectiveNoun { adjective = enumerator.Current };
+                        if (enumerator.MoveNext()
+                            && enumerator.Current.IsNoun)
+                            adj.right = GetNextNounPhrase(enumerator, true);
+                        result = adj;
+                        break;
+                    }
+                case PartOfSpeech.Pronoun:
+                case PartOfSpeech.Noun:
+                case PartOfSpeech.ProperNoun:
+                    result = new Noun
+                    {
+                        word = enumerator.Current
+                    };
+                    enumerator.MoveNext();
+                    break;
+                default:
+                    throw new UnexpectedWord(enumerator.Current.english);
+            }
+            // Noun + Conj. + Noun e.g. Ali and Reza
+            if (enumerator.Current?.pos == PartOfSpeech.Conjunction && !child)
+            {
+                var conj = new ConjNoun
+                {
+                    left = result,
+                    conjunction = enumerator.Current,
+                };
                 if (!enumerator.MoveNext())
                     throw new UnexpectedEnd();
-                result.right = GetNextNounPhrase(enumerator);
-                output = result;
+                if (!isSentence())
+                {
+                    conj.right = GetNextNounPhrase(enumerator, true);
+                    result = conj;
+                }
+
+                bool isSentence()
+                {
+                    // This doesn't copies the enumerator
+                    var clone = enumerator;
+                    try
+                    {
+                        GetNextSentence(clone);
+                        return true;
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
+                }
             }
-            return output;
+            return result;
         }
 
         private static VerbPhrase GetNextVerbPhrase(IEnumerator<Word> enumerator, Word person)
@@ -276,29 +328,6 @@ namespace Motarjem.Core
                 return subject;
             }
             return null;
-        }
-
-        private static Sentence GetNextSentence(IEnumerator<Word> enumerator)
-        {
-            // TODO: if + S1 + ',' + S2
-            // Simple Sentence: Noun Phrase + Verb Phrase
-            var sentence = new SimpleSentence { language = Language.English };
-            sentence.np = GetNextNounPhrase(enumerator);
-            sentence.vp = GetNextVerbPhrase(enumerator, FindSubject(sentence.np));
-            // Conjunction Sentence: S1 + and + S2
-            if (enumerator.Current?.pos == PartOfSpeech.Conjunction)
-            {
-                var conj = new ConjSentence { conj = enumerator.Current, left = sentence };
-                if (!enumerator.MoveNext())
-                    return sentence;
-                conj.right = GetNextSentence(enumerator);
-                return conj;
-            }
-
-            if (enumerator.MoveNext())
-                throw new UnexpectedWord(enumerator.Current.english);
-
-            return sentence;
         }
     }
 }
