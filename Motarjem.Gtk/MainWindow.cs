@@ -8,50 +8,68 @@ namespace Motarjem
         public MainWindow() : base("Motarjem")
         {
             // MainWindow
-            Destroyed += (sender, args) =>
+            DefaultWidth = 600;
+            DefaultHeight = 400;
+
+            // src
+            src = new Entry();
+            src.Text = "I am a program.";
+
+            // button
+            button = new Button
             {
-                Application.Quit();
+                Label = "Translate"
             };
-            DefaultWidth = 525;
-            DefaultHeight = 350;
+            button.Clicked += Button_Clicked;
 
-            // TextView
-            var tv = new TextView
+            // hBox
+            hBox = new Box(Orientation.Horizontal, 2);
+            hBox.PackStart(src, true, true, 2);
+            hBox.PackStart(button, false, false, 2);
+
+            // headerBar
+            headerBar = new HeaderBar
             {
-                Buffer =
-                {
-                    Text = "I am a program."
-                }
+                ShowCloseButton = true
             };
+            headerBar.PackStart(hBox);
+            headerBar.Title = "Motarjem";
+            Titlebar = headerBar;
 
-            // Content
-            var content = new TextView();
-            // - TextDisplay
-            var td = new TextDisplay(content.Buffer);
-
-            // Button
-            var btn = Button.NewWithLabel("Translate");
-            btn.Clicked += (sender, args) =>
+            // output
+            output = new TextView();
+            scrolledOutput = new ScrolledWindow
             {
-                td.Clear();
-                foreach (var s in Parser.ParseEnglish(Token.Tokenize(tv.Buffer.Text)))
-                {
-                    Translator.Translate(s).Display(td);
-                }
+                output
             };
+            Add(scrolledOutput);
 
-            // HBox
-            var hb = new HBox(false, 0);
+            // Setup Display for Translator
+            display = new TextDisplay(output.Buffer);
 
-            // VBox
-            var vb = new VBox();
-
-            // Add Components
-            hb.PackStart(tv, true, true, 2);
-            hb.PackStart(btn, false, false, 2);
-            vb.PackStart(hb, false, false, 2);
-            vb.PackStart(content, true, true, 2);
-            Add(vb);
+            // Show
+            ShowAll();
         }
+
+        private void Button_Clicked(object sender, System.EventArgs e)
+        {
+            display.Clear();
+            var sentence = Parser.ParseEnglish(Token.Tokenize(src.Buffer.Text));
+            foreach (var s in sentence)
+            {
+                s.Display(display);
+                display.PrintLine();
+                Translator.Translate(s).Display(display);
+                display.PrintLine();
+            }
+        }
+
+        private HeaderBar headerBar;
+        private Box hBox;
+        private Entry src;
+        private Button button;
+        private TextView output;
+        private ScrolledWindow scrolledOutput;
+        private TextDisplay display;
     }
 }

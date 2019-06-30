@@ -6,9 +6,12 @@ namespace Motarjem
     {
         private static void Main(string[] args)
         {
-            Application.Init("motarjem.gtk", ref args);
-            new MainWindow().ShowAll();
-            Application.Run();
+            var app = new Application("mmdmine.motarjem.gtk", GLib.ApplicationFlags.None);
+            app.Activated += (sender, event_args) =>
+            {
+                app.AddWindow(new MainWindow());
+            };
+            app.Run("mmdmine.motarjem.gtk", args);
         }
     }
 }
