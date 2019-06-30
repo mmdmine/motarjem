@@ -259,3 +259,6 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/Motarjem.Gtk/share
+/Motarjem.Gtk/lib/gdk-pixbuf-2.0/2.10.0/loaders
+/Motarjem.Gtk/etc/gtk-3.0
