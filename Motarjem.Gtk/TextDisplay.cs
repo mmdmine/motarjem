@@ -25,7 +25,7 @@ namespace Motarjem
         private readonly TextBuffer buffer;
         private TextIter iter;
         private TextTag textSize =
-            new TextTag("size_normal") { SizePoints = 21 };
+            new TextTag("size_normal") { SizePoints = 16 };
 
         public TextDisplay(TextBuffer tb)
         {

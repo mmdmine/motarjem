@@ -18,7 +18,7 @@
         <Button Grid.Row="0" 
                 HorizontalAlignment="Right" 
                 Content="Translate" Click="Translate" Cursor="Hand"
-                Margin="5,2" Background="#BBDEFB" Foreground="#0D47A1" BorderBrush="#90CAF9" />
+                Margin="5,2" Background="#90CAF9" Foreground="#0D47A1" BorderBrush="#90CAF9" />
         <FlowDocumentScrollViewer Grid.Row="1" 
                                   ScrollViewer.VerticalScrollBarVisibility="Auto" 
                                   ScrollViewer.HorizontalScrollBarVisibility="Auto" 
