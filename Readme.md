@@ -10,15 +10,16 @@ This is last screenshot from v0.1 beta.
 # Features
 * Parsing and Translating Simple English Sentences to Persian
 * Small Vocabulary
-* Windows Support
+* Linux (GTK) and Windows Support
 
 # To Do
-* Linux and Android Support
+* Use SQL database for Vocabulary
 * Extending Vocabulary
 * Adding Proper Nouns to Vocabulary
 * Parsing and Translating Conditions
 * Parsing and Translating Questions
 * Parsing and Translating from Persian
+* Android Support
 
 # License
 the project is open source and freely can be used for your personal or commerical works,
