@@ -156,46 +156,45 @@ namespace Motarjem.Core
                 {
                     // TODO?
                 }
-                else
-                {
-                    // generate Persian Verb
+
+                // generate Persian Verb
+                if (string.IsNullOrWhiteSpace(verb.word.persian_verb_identifier))
                     verb.word.persian_verb_identifier = FindPersianIdentifier();
 
-                    string FindPersianIdentifier()
+                string FindPersianIdentifier()
+                {
+                    if (person.count == PersonCount.Singular)
                     {
-                        if (person.count == PersonCount.Singular)
+                        switch (person.person)
                         {
-                            switch (person.person)
-                            {
-                                default:
-                                case Person.All:
-                                case Person.Third:
-                                    throw new Exception(); // TODO?
-                                case Person.First:
-                                    return "م";
-                                case Person.Second:
-                                    return "ی";
-                            }
+                            default:
+                            case Person.All:
+                            case Person.Third:
+                                throw new Exception(); // TODO?
+                            case Person.First:
+                                return "م";
+                            case Person.Second:
+                                return "ی";
                         }
-                        else if (person.count == PersonCount.Plural)
+                    }
+                    else if (person.count == PersonCount.Plural)
+                    {
+                        switch (person.person)
                         {
-                            switch (person.person)
-                            {
-                                default:
-                                case Person.All:
-                                    throw new Exception(); // TODO?
-                                case Person.First:
-                                    return "یم";
-                                case Person.Second:
-                                    return "ید";
-                                case Person.Third:
-                                    return "ند";
-                            }
+                            default:
+                            case Person.All:
+                                throw new Exception(); // TODO?
+                            case Person.First:
+                                return "یم";
+                            case Person.Second:
+                                return "ید";
+                            case Person.Third:
+                                return "ند";
                         }
-                        else
-                        {
-                            throw new Exception(); // TODO?
-                        }
+                    }
+                    else
+                    {
+                        throw new Exception(); // TODO?
                     }
                 }
 

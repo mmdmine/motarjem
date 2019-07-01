@@ -36,21 +36,23 @@ namespace Motarjem.Core
                 return (T)Enum.Parse(typeof(T), value, true);
             }
 
-            var word = new Word();
-            word.pos = x.Attributes().Any(a => a.Name == "pos") ? 
-                GetEnum<PartOfSpeech>("pos") :
-                (PartOfSpeech)Enum.Parse(typeof(PartOfSpeech), x.Name.LocalName, true);
-            word.english = GetAttribute("en");
-            word.persian = GetAttribute("fa");
-            word.persian_2 = GetAttribute("fav");
-            word.persian_verb_identifier = GetAttribute("fai");
-            word.person = GetEnum<Person>("person");
-            word.count = GetEnum<PersonCount>("count");
+            var word = new Word
+            {
+                pos = x.Attributes().Any(a => a.Name == "pos") ?
+                    GetEnum<PartOfSpeech>("pos") :
+                    (PartOfSpeech)Enum.Parse(typeof(PartOfSpeech), x.Name.LocalName, true),
+                english = GetAttribute("en"),
+                persian = GetAttribute("fa"),
+                persian_2 = GetAttribute("fav"),
+                persian_verb_identifier = GetAttribute("fai"),
+                person = GetEnum<Person>("person"),
+                count = GetEnum<PersonCount>("count"),
+                sex = GetEnum<PersonSex>("sex"),
+                tense = GetEnum<VerbTense>("tense")
+            };
             if (word.count == PersonCount.All &&
                 word.pos == PartOfSpeech.Noun)
                 word.count = PersonCount.Singular;
-            word.sex = GetEnum<PersonSex>("sex");
-            word.tense = GetEnum<VerbTense>("tense");
             return word;
         }
 
