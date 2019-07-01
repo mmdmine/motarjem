@@ -13,11 +13,10 @@ Motarjem GTK v0.2 beta on Linux
 
 # Features
 * Parsing and Translating Simple English Sentences to Persian
-* Small Vocabulary
+* Small Vocabulary written in SQLite3
 * Linux (GTK) and Windows Support
 
 # To Do
-* Use SQL database for Vocabulary
 * Extending Vocabulary
 * Adding Proper Nouns to Vocabulary
 * Parsing and Translating Conditions
