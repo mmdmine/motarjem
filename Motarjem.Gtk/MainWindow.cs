@@ -1,4 +1,5 @@
-﻿using Gtk;
+﻿using System;
+using Gtk;
 using Motarjem.Core;
 
 namespace Motarjem
@@ -53,14 +54,21 @@ namespace Motarjem
 
         private void Button_Clicked(object sender, System.EventArgs e)
         {
-            display.Clear();
-            var sentence = Sentence.ParseEnglish(src.Buffer.Text);
-            foreach (var s in sentence)
+            try
             {
-                s.Display(display);
-                display.PrintLine();
-                s.Translate().Display(display);
-                display.PrintLine();
+                display.Clear();
+                var sentence = Sentence.ParseEnglish(src.Buffer.Text);
+                foreach (var s in sentence)
+                {
+                    s.Display(display);
+                    display.PrintLine();
+                    s.Translate().Display(display);
+                    display.PrintLine();
+                }
+            }
+            catch (Exception ex)
+            {
+                display.Print("Error: " + ex, FontColor.Red);
             }
         }
 
