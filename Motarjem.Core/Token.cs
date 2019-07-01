@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Motarjem.Core
 {
-    public class Token
+    internal class Token
     {
         public enum Type
         {

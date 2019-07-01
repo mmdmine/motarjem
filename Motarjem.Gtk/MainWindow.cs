@@ -54,12 +54,12 @@ namespace Motarjem
         private void Button_Clicked(object sender, System.EventArgs e)
         {
             display.Clear();
-            var sentence = Parser.ParseEnglish(Token.Tokenize(src.Buffer.Text));
+            var sentence = Sentence.ParseEnglish(src.Buffer.Text);
             foreach (var s in sentence)
             {
                 s.Display(display);
                 display.PrintLine();
-                Translator.Translate(s).Display(display);
+                s.Translate().Display(display);
                 display.PrintLine();
             }
         }

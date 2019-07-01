@@ -51,14 +51,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Exceptions.cs" />
-    <Compile Include="Parser.cs" />
+    <Compile Include="NounPhrase.cs" />
     <Compile Include="IDisplay.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="Phrase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sentence.cs" />
     <Compile Include="Dictionary.cs" />
-    <Compile Include="Translator.cs" />
+    <Compile Include="VerbPhrase.cs" />
+    <Compile Include="Word.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

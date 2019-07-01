@@ -34,11 +34,11 @@ namespace Motarjem
             var fa_display = new Display(fa.Inlines);
             try
             {
-                var sentences = Parser.ParseEnglish(Token.Tokenize(input.Text));
+                var sentences = Sentence.ParseEnglish(input.Text);
                 foreach (var s in sentences)
                 {
                     s.Display(en_display);
-                    Translator.Translate(s).Display(fa_display);
+                    s.Translate().Display(fa_display);
                 }
                 output.Blocks.Add(en);
                 output.Blocks.Add(fa);
