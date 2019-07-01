@@ -169,13 +169,12 @@ namespace Motarjem.Core
                             {
                                 default:
                                 case Person.All:
+                                case Person.Third:
                                     throw new Exception(); // TODO?
                                 case Person.First:
                                     return "م";
                                 case Person.Second:
                                     return "ی";
-                                case Person.Third:
-                                    return verb.word.tense == VerbTense.Present ? "د" : "";
                             }
                         }
                         else if (person.count == PersonCount.Plural)

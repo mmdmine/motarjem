@@ -1,11 +1,59 @@
-﻿using System.Linq;
+﻿using System.Xml.Linq;
+using System.Linq;
 using System.Collections.Generic;
 using System;
 
 namespace Motarjem.Core
 {
-    public static partial class Dictionary
+    public static class Dictionary
     {
+        private static IEnumerable<XElement> Words = XDocument.Load(".\\words.xml").Elements().First(a => a.Name == "words").Elements();
+
+        private static IEnumerable<Word> Pronouns = from word in Words where word.Name.LocalName == "pronoun" select ParseWord(word);
+        private static IEnumerable<Word> Verbs = from word in Words where word.Name.LocalName == "verb" select ParseWord(word);
+        private static IEnumerable<Word> Conjs = from word in Words where word.Name.LocalName == "conjunction" select ParseWord(word);
+        private static IEnumerable<Word> Determiners = from word in Words where word.Name.LocalName == "determiner" select ParseWord(word);
+        private static IEnumerable<Word> Adjectives = from word in Words where word.Name.LocalName == "adjective" select ParseWord(word);
+        private static IEnumerable<Word> Nouns = from word in Words where word.Name.LocalName == "noun" select ParseWord(word);
+
+        private static Word ParseWord(XElement x)
+        {
+            string GetAttribute(string attribute)
+            {
+                var matches = x.Attributes(XName.Get(attribute));
+                if (matches.Count() == 0)
+                    return null;
+                if (matches.Count() > 1)
+                    throw new Exception(); // data error
+                return matches.First().Value;
+            }
+
+            T GetEnum<T>(string attribute)
+            {
+                var value = GetAttribute(attribute);
+                if (value == null)
+                    return default(T);
+                return (T)Enum.Parse(typeof(T), value, true);
+            }
+
+            var word = new Word();
+            word.pos = x.Attributes().Any(a => a.Name == "pos") ? 
+                GetEnum<PartOfSpeech>("pos") :
+                (PartOfSpeech)Enum.Parse(typeof(PartOfSpeech), x.Name.LocalName, true);
+            word.english = GetAttribute("en");
+            word.persian = GetAttribute("fa");
+            word.persian_2 = GetAttribute("fav");
+            word.persian_verb_identifier = GetAttribute("fai");
+            word.person = GetEnum<Person>("person");
+            word.count = GetEnum<PersonCount>("count");
+            if (word.count == PersonCount.All &&
+                word.pos == PartOfSpeech.Noun)
+                word.count = PersonCount.Singular;
+            word.sex = GetEnum<PersonSex>("sex");
+            word.tense = GetEnum<VerbTense>("tense");
+            return word;
+        }
+
         public static IEnumerable<Word> LookupEn(string query)
         {
             var matches = new List<Word>();
@@ -56,6 +104,7 @@ namespace Motarjem.Core
                 result.person = Person.Third;
                 result.count = PersonCount.Singular;
                 result.tense = VerbTense.Present;
+                result.persian_verb_identifier = "د";
                 return result;
             }
             if (query.EndsWith("s"))

@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<words>
+  <pronoun en="I" fa="من" person="First" count="Singular" />
+  <pronoun en="we" fa="ما" person="First" count="Plural" />
+  <pronoun en="you" fa="تو" person="Second" count="Singular" />
+  <pronoun en="you" fa="شما" person="Second" count="Plural" />
+  <pronoun en="he" fa="او" person="Third" count="Singular" sex="Male" />
+  <pronoun en="she" fa="او" person="Third" count="Singular" sex="Female" />
+  <pronoun en="it" fa="آن" person="Third" count="Singular" />
+  <pronoun en="they" fa="آنها" person="Third" count="Plural" />
+  <verb pos="ToBe" en="am" fa="هست" fai="م" person="First" count="Singular" tense="Present" />
+  <verb pos="ToBe" en="is" fa="هست" fai="" person="Third" count="Singular" tense="Present" />
+  <verb pos="ToBe" en="are" fa="هست" fai="ید" person="Second" count="Plural" tense="Present" />
+  <verb pos="ToBe" en="are" fa="هست" fai="ی" person="Second" count="Singular" tense="Present" />
+  <verb pos="ToBe" en="are" fa="هست" fai="ند" person="Third" count="Plural" tense="Present" />
+  <verb pos="ToBe" en="was" fa="بود" fai="م" person="First" count="Singular" tense="Past" />
+  <verb pos="ToBe" en="was" fa="بود" fai="ی" person="Second" count="Singular" tense="Past" />
+  <verb pos="ToBe" en="was" fa="بود" fai="" person="Third" count="Singular" tense="Past" />
+  <verb pos="ToBe" en="were" fa="بود" fai="یم" person="First" count="Plural" tense="Past" />
+  <verb pos="ToBe" en="were" fa="بود" fai="ید" person="Second" count="Plural" tense="Past" />
+  <verb pos="ToBe" en="were" fa="بود" fai="ند" person="Third" count="PLural" tense="Past" />
+  <verb en="have" fa="دار" tense="Present" />
+  <verb en="has" fa="دار" fai="د" tense="Present" />
+  <verb en="had" fa="داشت" tense="Past" />
+  <verb en="love" fa="دوست" fav="دار" tense="Present" />
+  <verb en="write" fa="نویس" tense="Present" />
+  <verb en="wrote" fa="نوشت" tense="Past" />
+  <conjunction en="and" fa="و" />
+  <conjunction en="or" fa="یا" />
+  <conjunction en="but" fa="اما" />
+  <conjunction en="that" fa="که" />
+  <determiner en="the" />
+  <determiner en="a" fa="یک" />
+  <determiner en="an" fa="یک" />
+  <determiner en="some" fa="مقداری" />
+  <determiner en="many" fa="خیلی" />
+  <determiner en="few" fa="کمی" />
+  <determiner en="that" fa="آن" />
+  <adjective en="happy" fa="خوشحال" />
+  <adjective en="sad" fa="ناراحت" />
+  <adjective en="busy" fa="مشغول" />
+  <adjective en="big" fa="بزرگ" />
+  <adjective en="small" fa="کوچک" />
+  <adjective en="beauty" fa="زیبا" />
+  <adjective en="ugly" fa="زشت" />
+  <noun en="program" fa="برنامه" />
+  <noun en="butterfly" fa="پروانه" />
+  <noun en="cat" fa="گربه" />
+  <noun en="dog" fa="سگ" />
+  <noun en="book" fa="کتاب" />
+  <noun en="programmer" fa="برنامه‌نویس" />
+</words>
