@@ -1,13 +1,14 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 using System.Collections.Generic;
-using System;
 
 namespace Motarjem.Core
 {
     public static class Dictionary
     {
-        private static IEnumerable<XElement> Words = XDocument.Load(".\\words.xml").Elements().First(a => a.Name == "words").Elements();
+        private static IEnumerable<XElement> Words = XDocument.Load(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "words.xml")).Elements().First(a => a.Name == "words").Elements();
 
         private static IEnumerable<Word> Pronouns = from word in Words where word.Name.LocalName == "pronoun" select ParseWord(word);
         private static IEnumerable<Word> Verbs = from word in Words where word.Name.LocalName == "verb" select ParseWord(word);
