@@ -13,9 +13,9 @@ namespace Motarjem
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             Word.OpenDictionary(
-                new XmlDictionaryFile(
+                new SqlDictionaryFile(
                     Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                    "words.xml")));
+                    "words.sqlite3")));
         }
     }
 }

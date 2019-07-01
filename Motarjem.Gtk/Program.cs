@@ -10,9 +10,9 @@ namespace Motarjem
         private static void Main(string[] args)
         {
             Word.OpenDictionary(
-                new XmlDictionaryFile(
+                new SqlDictionaryFile(
                     Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                    "words.xml")));
+                    "words.sqlite3")));
 
             var app = new Application("mmdmine.motarjem.gtk", GLib.ApplicationFlags.None);
             app.Activated += (sender, event_args) =>
