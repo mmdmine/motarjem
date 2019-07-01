@@ -23,11 +23,16 @@
                                   ScrollViewer.VerticalScrollBarVisibility="Auto" 
                                   ScrollViewer.HorizontalScrollBarVisibility="Auto" 
                                   IsToolBarVisible="True">
-            <FlowDocument Name="output">
-                <Paragraph>
+            <FlowDocument>
+                <Paragraph Name="en">
                     <Run>Press</Run>
                     <Run FontStyle="Italic">Translate</Run>
                     <Run>to Start...</Run>
+                </Paragraph>
+                <Paragraph FlowDirection="RightToLeft" Name="fa">
+                    <Run>برای شروع، دکمه</Run>
+                    <Run FontStyle="Italic">Translate</Run>
+                    <Run>را فشار دهید...</Run>
                 </Paragraph>
             </FlowDocument>
         </FlowDocumentScrollViewer>

@@ -80,5 +80,10 @@ namespace Motarjem
         {
             _inlines.Add(new Run(" "));
         }
+
+        public void Clear()
+        {
+            _inlines.Clear();
+        }
     }
 }

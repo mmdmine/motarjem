@@ -23,52 +23,40 @@ namespace Motarjem
         public MainWindow()
         {
             InitializeComponent();
+            en_display = new Display(en.Inlines);
+            fa_display = new Display(fa.Inlines);
         }
 
         private void Translate(object sender, RoutedEventArgs e)
         {
-            output.Blocks.Clear();
-            var en = new Paragraph();
-            var fa = new Paragraph { FlowDirection = FlowDirection.RightToLeft };
-            var en_display = new Display(en.Inlines);
-            var fa_display = new Display(fa.Inlines);
             try
             {
-                var sentences = Sentence.ParseEnglish(input.Text);
-                foreach (var s in sentences)
+                en_display.Clear();
+                fa_display.Clear();
+                foreach (var s in Sentence.ParseEnglish(input.Text))
                 {
                     s.Display(en_display);
                     s.Translate().Display(fa_display);
                 }
-                output.Blocks.Add(en);
-                output.Blocks.Add(fa);
             }
             catch (MotarjemException ex)
             {
-                var err = new Paragraph
-                {
-                    Foreground = new SolidColorBrush(Color.FromRgb(0xB0, 0x00, 0x20))
-                };
-                err.Inlines.Add(new Run { Text = "Error: " });
-                err.Inlines.Add(new Run { FontStyle = FontStyles.Italic, Text = ex.GetType().FullName });
-                err.Inlines.Add(new LineBreak());
-                err.Inlines.Add(new Run { Text = ex.Message });
-                err.Inlines.Add(new LineBreak());
-                err.Inlines.Add(new Run { Text = ex.MessageFa, FlowDirection = FlowDirection.RightToLeft });
-                output.Blocks.Add(err);
+                en_display.Clear();
+                en_display.Print("Error: " + ex.Message, FontColor.Red);
+                fa_display.Clear();
+                fa_display.Print("خطا: " + ex.MessageFa, FontColor.Red);
             }
 #if !DEBUG
             catch (Exception ex)
             {
-                var err = new Paragraph
-                {
-                    Foreground = new SolidColorBrush(Color.FromRgb(0xB0, 0x00, 0x20))
-                };
-                err.Inlines.Add(new Run { Text = "Internal Error: " });
-                err.Inlines.Add(new Run { FontStyle = FontStyles.Italic,  Text = ex.GetType().FullName });
-                output.Blocks.Add(err);
+                en_display.Clear();
+                fa_display.Clear();
+                en_display.Print("Internal Error: " + ex, FontColor.Red);
             }
 #endif
         }
+
+        private Display en_display;
+        private Display fa_display;
     }
 }
