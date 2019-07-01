@@ -3,9 +3,13 @@ Motarjem is an offline translator that uses Natural Language Processing
 to parse and translate English sentences to Persian.
 
 # Screenshots
-This is last screenshot from v0.1 beta.
+Motarjem v0.2 beta on Windows
 
-![Motarjem](assets/Motarjem-beta-01.png)
+![Motarjem](assets/Motarjem-beta-02.png)
+
+Motarjem GTK v0.2 beta on Linux
+
+![Motarjem GTK](assets/Motarjem-gtk-beta-02.png)
 
 # Features
 * Parsing and Translating Simple English Sentences to Persian

@@ -14,7 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Motarjem.Core", "Motarjem.C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{6DD3ACC6-0EEA-4DF4-A9E9-F95CDE4F188B}"
 	ProjectSection(SolutionItems) = preProject
-		assets\Motarjem-beta-01.png = assets\Motarjem-beta-01.png
+		assets\Motarjem-beta-02.png = assets\Motarjem-beta-02.png
+		assets\Motarjem-gtk-beta-02.png = assets\Motarjem-gtk-beta-02.png
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Motarjem.Gtk", "Motarjem.Gtk\Motarjem.Gtk.csproj", "{EF6D90F7-7432-4A14-8F8E-6716D3FAFC14}"
