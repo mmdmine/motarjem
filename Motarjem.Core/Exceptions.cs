@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Motarjem.Core
 {
-    public class MotarjemException : Exception
+    public abstract class MotarjemException : Exception
     {
         public string MessageFa { get; }
 
@@ -15,7 +12,7 @@ namespace Motarjem.Core
         }
     }
 
-    public class UnexpectedEnd : MotarjemException
+    internal class UnexpectedEnd : MotarjemException
     {
         public UnexpectedEnd() : 
             base("Unexpected end of sentence", "پایان غیر منتظره جمله")
@@ -23,7 +20,7 @@ namespace Motarjem.Core
         }
     }
 
-    public class UnexpectedWord : MotarjemException
+    internal class UnexpectedWord : MotarjemException
     {
         public UnexpectedWord(string word) :
             base("Unexpected word '" + word + "'", "واژه غیرمنتظره '" + word + "'")
@@ -31,7 +28,7 @@ namespace Motarjem.Core
         }
     }
 
-    public class UndefinedWord : MotarjemException
+    internal class UndefinedWord : MotarjemException
     {
         public UndefinedWord(string word) :
             base("Undefined word '" + word + "'", "واژه تعریف نشده '" + word + "'")
@@ -39,7 +36,7 @@ namespace Motarjem.Core
         }
     }
 
-    public class GrammerError : MotarjemException
+    internal class GrammerError : MotarjemException
     {
         public GrammerError(string word) :
             base($"Grammer Error at '{word}'", $"خطای گرامری در '{word}'")

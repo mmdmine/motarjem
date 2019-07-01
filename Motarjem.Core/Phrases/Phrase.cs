@@ -1,8 +1,6 @@
 ﻿using System;
 
-// TODO: split Persian Phrase and English Phrase
-
-namespace Motarjem.Core
+namespace Motarjem.Core.Phrases
 {
     public abstract class Phrase
     {

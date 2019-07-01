@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Motarjem.Core.Dictionary;
 
-namespace Motarjem.Core
+namespace Motarjem.Core.Phrases
 {
     public abstract class VerbPhrase : Phrase
     {
@@ -69,7 +70,7 @@ namespace Motarjem.Core
                 }
 
                 // Tense
-                if (verb.word.pos == PartOfSpeech.ToBe)
+                if (verb.word.pos == PartsOfSpeech.ToBe)
                 {
                     // Noun + To Be + Adjective/Noun
                     verb.tense = VerbPhraseTense.Subjective;
@@ -96,8 +97,8 @@ namespace Motarjem.Core
 
                 if (verb.tense == VerbPhraseTense.Subjective && (
                     words.Peek().Any(a => a.IsNoun)
-                    || words.Peek().Any(a => a.pos == PartOfSpeech.Determiner)
-                    || words.Peek().Any(a => a.pos == PartOfSpeech.Adjective)))
+                    || words.Peek().Any(a => a.pos == PartsOfSpeech.Determiner)
+                    || words.Peek().Any(a => a.pos == PartsOfSpeech.Adjective)))
                 {
                     return new SubjectiveVerb
                     {
@@ -106,7 +107,7 @@ namespace Motarjem.Core
                     };
                 }
                 else if (words.Peek().Any(a => a.IsNoun)
-                    || words.Peek().Any(a => a.pos == PartOfSpeech.Determiner))
+                    || words.Peek().Any(a => a.pos == PartsOfSpeech.Determiner))
                 {
                     return new ObjectiveVerb
                     {
@@ -121,82 +122,6 @@ namespace Motarjem.Core
             {
                 throw new UnexpectedWord(words.Dequeue()[0].english);
             }
-        }
-    }
-
-    public enum VerbPhraseTense
-    {
-        Subjective,
-        SimplePresent,
-        SimplePast,
-    }
-
-    public class Verb : VerbPhrase
-    {
-        public Word word;
-        public VerbPhraseTense tense;
-
-        protected override void DisplayEnglish(IDisplay display)
-        {
-            display.Print(word.english, FontColor.Green);
-            display.PrintSpace();
-        }
-
-        protected override void DisplayPersian(IDisplay display)
-        {
-            if (tense == VerbPhraseTense.SimplePresent &&
-                string.IsNullOrWhiteSpace(word.persian_2))
-                display.Print("می", FontColor.Green);
-            display.Print(word.persian, FontColor.Green);
-            if (!string.IsNullOrWhiteSpace(word.persian_2))
-            {
-                if (tense == VerbPhraseTense.SimplePresent)
-                    display.Print("می", FontColor.Green);
-                display.Print(word.persian_2, FontColor.Green);
-            }
-            if (!string.IsNullOrWhiteSpace(word.persian_verb_identifier))
-                display.Print(word.persian_verb_identifier, FontColor.Green);
-            display.PrintSpace();
-        }
-    }
-
-    public class ObjectiveVerb : VerbPhrase
-    {
-        public VerbPhrase action;
-        public NounPhrase objectNoun;
-
-        protected override void DisplayEnglish(IDisplay display)
-        {
-            action.Display(display, Language.English);
-            objectNoun.Display(display, Language.English);
-        }
-
-        protected override void DisplayPersian(IDisplay display)
-        {
-            objectNoun.Display(display, Language.Persian);
-
-            display.Print("را", FontColor.Gray);
-            display.PrintSpace();
-
-            action.Display(display, Language.Persian);
-        }
-    }
-
-    public class SubjectiveVerb : VerbPhrase
-    {
-        public VerbPhrase toBe;
-        public NounPhrase status;
-
-        protected override void DisplayEnglish(IDisplay display)
-        {
-            toBe.Display(display, Language.English);
-            status.Display(display, Language.English);
-        }
-
-        protected override void DisplayPersian(IDisplay display)
-        {
-            status.Display(display, Language.Persian);
-            toBe.Display(display, Language.Persian);
         }
     }
 }

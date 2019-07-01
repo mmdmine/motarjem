@@ -50,16 +50,28 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Sentences\ConjSentence.cs" />
+    <Compile Include="Dictionary\EnglishDictionary.cs" />
+    <Compile Include="Dictionary\IDictionaryFile.cs" />
     <Compile Include="Exceptions.cs" />
-    <Compile Include="NounPhrase.cs" />
+    <Compile Include="Phrases\AdjectiveNoun.cs" />
+    <Compile Include="Phrases\ConjNoun.cs" />
+    <Compile Include="Phrases\DeterminerNoun.cs" />
+    <Compile Include="Phrases\Noun.cs" />
+    <Compile Include="Phrases\NounPhrase.cs" />
     <Compile Include="IDisplay.cs" />
+    <Compile Include="Phrases\ObjectiveVerb.cs" />
+    <Compile Include="Phrases\SubjectiveVerb.cs" />
+    <Compile Include="Phrases\Verb.cs" />
+    <Compile Include="Sentences\SimpleSentence.cs" />
     <Compile Include="Token.cs" />
-    <Compile Include="Phrase.cs" />
+    <Compile Include="Phrases\Phrase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sentence.cs" />
-    <Compile Include="Dictionary.cs" />
-    <Compile Include="VerbPhrase.cs" />
-    <Compile Include="Word.cs" />
+    <Compile Include="Dictionary\Dictionary.cs" />
+    <Compile Include="Phrases\VerbPhrase.cs" />
+    <Compile Include="Dictionary\Word.cs" />
+    <Compile Include="Dictionary\XmlDictionaryFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -80,5 +92,6 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

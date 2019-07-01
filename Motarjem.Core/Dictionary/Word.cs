@@ -1,28 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Motarjem.Core
+namespace Motarjem.Core.Dictionary
 {
     public class Word
     {
-        public string english = "";
-        public string persian = "";
-        public string persian_2 = "";
-        public string persian_verb_identifier = "";
-        public PartOfSpeech pos = PartOfSpeech.Noun;
-        public Person person = Person.All;
-        public PersonCount count = PersonCount.All;
-        public PersonSex sex = PersonSex.All;
-        public PronounType pronounType = PronounType.None;
-        public VerbTense tense = VerbTense.None;
+        internal string english = "";
+        internal string persian = "";
+        internal string persian_2 = "";
+        internal string persian_verb_identifier = "";
+        internal PartsOfSpeech pos = PartsOfSpeech.Noun;
+        internal Person person = Person.All;
+        internal PersonCount count = PersonCount.All;
+        internal PersonSex sex = PersonSex.All;
+        internal PronounType pronounType = PronounType.None;
+        internal VerbTense tense = VerbTense.None;
 
         public bool IsNoun
         {
             get
             {
-                return pos == PartOfSpeech.Noun || pos == PartOfSpeech.Pronoun || pos == PartOfSpeech.ProperNoun;
+                return pos == PartsOfSpeech.Noun ||
+                    pos == PartsOfSpeech.Pronoun ||
+                    pos == PartsOfSpeech.ProperNoun;
             }
         }
 
@@ -30,8 +31,15 @@ namespace Motarjem.Core
         {
             get
             {
-                return pos == PartOfSpeech.Verb || pos == PartOfSpeech.AuxiliaryVerb || pos == PartOfSpeech.ToBe;
+                return pos == PartsOfSpeech.Verb ||
+                    pos == PartsOfSpeech.AuxiliaryVerb ||
+                    pos == PartsOfSpeech.ToBe;
             }
+        }
+
+        public static void OpenDictionary(IDictionaryFile file)
+        {
+            _dictionary = new EnglishDictionary(file);
         }
 
         internal static Word[] ParseEnglish(Queue<Token> tokens)
@@ -49,14 +57,16 @@ namespace Motarjem.Core
                     break;
                 }
             }
-            var matches = Dictionary.LookupEn(str.ToString());
+            var matches = _dictionary.Lookup(str.ToString());
             if (!matches.Any())
                 throw new UndefinedWord(str.ToString());
             return matches.ToArray();
         }
+
+        private static EnglishDictionary _dictionary;
     }
 
-    public enum PartOfSpeech
+    internal enum PartsOfSpeech
     {
         Noun, Pronoun, ProperNoun,
         Verb, AuxiliaryVerb, ToBe,
@@ -66,22 +76,22 @@ namespace Motarjem.Core
         Number,
     }
 
-    public enum Person
+    internal enum Person
     {
         All, First, Second, Third
     }
 
-    public enum PersonCount
+    internal enum PersonCount
     {
         All, Singular, Plural
     }
 
-    public enum PersonSex
+    internal enum PersonSex
     {
         All, Male, Female
     }
 
-    public enum VerbTense
+    internal enum VerbTense
     {
         None,
         Present,
@@ -89,7 +99,7 @@ namespace Motarjem.Core
         PastParticiple,
     }
 
-    public enum PronounType
+    internal enum PronounType
     {
         None,
         Subjective,

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
+using System.IO;
 using System.Windows;
+using Motarjem.Core.Dictionary;
 
 namespace Motarjem
 {
@@ -12,5 +10,12 @@ namespace Motarjem
     /// </summary>
     public partial class App : Application
     {
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            Word.OpenDictionary(
+                new XmlDictionaryFile(
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                    "words.xml")));
+        }
     }
 }
