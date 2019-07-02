@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Motarjem.Core.Dictionary;
 
 namespace Motarjem.Core.Phrases
@@ -27,7 +27,7 @@ namespace Motarjem.Core.Phrases
 
         internal static AdjectiveNoun ParseEnglish(Queue<Word[]> words)
         {
-            var adj = new AdjectiveNoun { Adjective = words.Dequeue().First(a => a.Pos == PartsOfSpeech.Adjective) };
+            var adj = new AdjectiveNoun {Adjective = words.Dequeue().First(a => a.Pos == PartsOfSpeech.Adjective)};
             if (words.Any()
                 && words.Peek().Any(a => a.IsNoun))
                 adj.Right = ParseEnglish(words, true);

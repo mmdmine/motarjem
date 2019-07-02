@@ -14,7 +14,7 @@ namespace Motarjem.Core.Phrases
             else if (lang == Language.Persian)
                 DisplayPersian(display);
             else
-                throw new Exception(); // only when language is not set.
+                throw new ArgumentOutOfRangeException(); // only when language is not set.
         }
     }
 }

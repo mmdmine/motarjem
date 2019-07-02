@@ -9,8 +9,8 @@ namespace Motarjem.Core
     public enum Language
     {
         English,
-        Persian,
-    };
+        Persian
+    }
 
     public abstract class Sentence
     {
@@ -24,7 +24,6 @@ namespace Motarjem.Core
             var tokens = new Queue<Token>(Token.Tokenize(text));
             var words = new Queue<Word[]>();
             while (tokens.Any())
-            {
                 switch (tokens.Peek().TokenType)
                 {
                     case Token.Type.Dot:
@@ -49,22 +48,19 @@ namespace Motarjem.Core
                         words.Enqueue(Word.ParseEnglish(tokens));
                         break;
                 }
-            }
         }
 
         internal static Sentence ParseEnglish(Queue<Word[]> words)
         {
             // TODO: if + S1 + ',' + S2
-            
+
             // Simple Sentence: Noun Phrase + Verb Phrase
             Sentence sentence = SimpleSentence.ParseEnglish(words);
-            
+
             // Conjunction Sentence: S1 + and + S2
             if (words.Any() && words.Peek()[0].Pos == PartsOfSpeech.Conjunction)
-            {
                 sentence = ConjSentence.ParseEnglish(sentence, words);
-            }
-            
+
             // Is any word left?
             if (words.Any())
                 throw new UnexpectedWord(words.Dequeue()[0].English);

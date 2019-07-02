@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Motarjem.Core.Dictionary;
 
-namespace Motarjem.Core
+namespace Motarjem.Core.Sentences
 {
     internal class ConjSentence : Sentence
     {
-        public Sentence Left;
         public Word Conj;
+        public Sentence Left;
         public Sentence Right;
 
         public override void Display(IDisplay display)
@@ -42,13 +42,12 @@ namespace Motarjem.Core
 
         internal static ConjSentence ParseEnglish(Sentence left, Queue<Word[]> words)
         {
-            var conj = new ConjSentence
+            return new ConjSentence
             {
                 Left = left,
                 Conj = words.Dequeue().First(a => a.Pos == PartsOfSpeech.Conjunction),
+                Right = ParseEnglish(words)
             };
-            conj.Right = ParseEnglish(words);
-            return conj;
         }
     }
 }

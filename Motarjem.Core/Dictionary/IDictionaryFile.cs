@@ -6,9 +6,9 @@ namespace Motarjem.Core.Dictionary
     {
         IEnumerable<Word> Pronouns { get; }
         IEnumerable<Word> Verbs { get; }
-        IEnumerable<Word> Conjs { get; }
-        IEnumerable<Word> Dets { get; }
-        IEnumerable<Word> Adjs { get; }
+        IEnumerable<Word> Conjunctions { get; }
+        IEnumerable<Word> Determiners { get; }
+        IEnumerable<Word> Adjectives { get; }
         IEnumerable<Word> Nouns { get; }
     }
 }

@@ -28,7 +28,7 @@ namespace Motarjem.Core.Sentences
                     {
                         Language = Language.Persian,
                         _np = _np, //np.Translate()
-                        _vp = _vp, //vp.Translate()
+                        _vp = _vp //vp.Translate()
                     };
                 case Language.Persian:
                     throw new NotImplementedException();
@@ -47,18 +47,16 @@ namespace Motarjem.Core.Sentences
             sentence._vp = VerbPhrase.ParseEnglish(words, FindSubject(sentence._np));
             return sentence;
         }
-        
+
         private static Word FindSubject(NounPhrase np)
         {
             var noun = np as Noun;
             if (noun != null)
-            {
                 return new Word
                 {
                     Count = noun.Word.Count,
-                    Person = noun.Word.Pos == PartsOfSpeech.Pronoun ? noun.Word.Person : Person.Third,
+                    Person = noun.Word.Pos == PartsOfSpeech.Pronoun ? noun.Word.Person : Person.Third
                 };
-            }
 
             var dn = np as DeterminerNoun;
             if (dn != null)
@@ -73,22 +71,13 @@ namespace Motarjem.Core.Sentences
             if (cn == null) return null;
             var subject = new Word
             {
-                Count = PersonCount.Plural,
+                Count = PersonCount.Plural
             };
             var left = FindSubject(cn.Left);
             var right = FindSubject(cn.Right);
-            if (left.Pos == PartsOfSpeech.Pronoun)
-            {
-                subject.Person = left.Person;
-            }
-            if (right.Pos == PartsOfSpeech.Pronoun)
-            {
-                subject.Person = right.Person;
-            }
-            if (subject.Person == Person.All)
-            {
-                subject.Person = Person.Third;
-            }
+            if (left.Pos == PartsOfSpeech.Pronoun) subject.Person = left.Person;
+            if (right.Pos == PartsOfSpeech.Pronoun) subject.Person = right.Person;
+            if (subject.Person == Person.All) subject.Person = Person.Third;
             return subject;
         }
     }

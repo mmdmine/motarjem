@@ -1,13 +1,13 @@
-﻿using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Motarjem.Core.Dictionary;
 
 namespace Motarjem.Core.Phrases
 {
     internal class ConjNoun : NounPhrase
     {
-        public NounPhrase Left;
         public Word Conjunction;
+        public NounPhrase Left;
         public NounPhrase Right;
 
         protected override void DisplayEnglish(IDisplay display)

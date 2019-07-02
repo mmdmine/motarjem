@@ -6,6 +6,9 @@ namespace Motarjem
 {
     public class MainWindow : Window
     {
+        private readonly TextDisplay _display;
+        private readonly Entry _src;
+
         public MainWindow() : base("Motarjem")
         {
             // MainWindow
@@ -13,46 +16,45 @@ namespace Motarjem
             DefaultHeight = 400;
 
             // src
-            _src = new Entry();
-            _src.Text = "I am a program.";
+            _src = new Entry {Text = "I am a program."};
 
             // button
-            _button = new Button
+            var button = new Button
             {
                 Label = "Translate"
             };
-            _button.Clicked += Button_Clicked;
+            button.Clicked += Button_Clicked;
 
             // hBox
-            _hBox = new Box(Orientation.Horizontal, 2);
-            _hBox.PackStart(_src, true, true, 2);
-            _hBox.PackStart(_button, false, false, 2);
+            var hBox = new Box(Orientation.Horizontal, 2);
+            hBox.PackStart(_src, true, true, 2);
+            hBox.PackStart(button, false, false, 2);
 
             // headerBar
-            _headerBar = new HeaderBar
+            var headerBar = new HeaderBar
             {
                 ShowCloseButton = true
             };
-            _headerBar.PackStart(_hBox);
-            _headerBar.Title = "Motarjem";
-            Titlebar = _headerBar;
+            headerBar.PackStart(hBox);
+            headerBar.Title = "Motarjem";
+            Titlebar = headerBar;
 
             // output
-            _output = new TextView();
-            _scrolledOutput = new ScrolledWindow
+            var output = new TextView();
+            var scrolledOutput = new ScrolledWindow
             {
-                _output
+                output
             };
-            Add(_scrolledOutput);
+            Add(scrolledOutput);
 
             // Setup Display for Translator
-            _display = new TextDisplay(_output.Buffer);
+            _display = new TextDisplay(output.Buffer);
 
             // Show
             ShowAll();
         }
 
-        private void Button_Clicked(object sender, System.EventArgs e)
+        private void Button_Clicked(object sender, EventArgs e)
         {
             try
             {
@@ -71,13 +73,5 @@ namespace Motarjem
                 _display.Print("Error: " + ex, FontColor.Red);
             }
         }
-
-        private HeaderBar _headerBar;
-        private Box _hBox;
-        private Entry _src;
-        private Button _button;
-        private TextView _output;
-        private ScrolledWindow _scrolledOutput;
-        private TextDisplay _display;
     }
 }

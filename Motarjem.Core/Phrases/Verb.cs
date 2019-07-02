@@ -4,8 +4,8 @@ namespace Motarjem.Core.Phrases
 {
     internal class Verb : VerbPhrase
     {
-        public Word Word;
         public VerbPhraseTense Tense;
+        public Word Word;
 
         protected override void DisplayEnglish(IDisplay display)
         {
@@ -25,6 +25,7 @@ namespace Motarjem.Core.Phrases
                     display.Print("می", FontColor.Green);
                 display.Print(Word.Persian2, FontColor.Green);
             }
+
             if (!string.IsNullOrWhiteSpace(Word.PersianVerbIdentifier))
                 display.Print(Word.PersianVerbIdentifier, FontColor.Green);
             display.PrintSpace();
@@ -35,6 +36,6 @@ namespace Motarjem.Core.Phrases
     {
         Subjective,
         SimplePresent,
-        SimplePast,
+        SimplePast
     }
 }

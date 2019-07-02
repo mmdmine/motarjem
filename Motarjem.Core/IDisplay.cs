@@ -2,25 +2,26 @@
 {
     public enum FontColor
     {
-        Red,        // Error
-        Black,      // Noun
-        Blue,       // Pronoun
-        Green,      // Verb
-        LightRed,   // Adjective
+        Red, // Error
+        Black, // Noun
+        Blue, // Pronoun
+        Green, // Verb
+        LightRed, // Adjective
         LightGreen, // Preposition
-        LightBlue,  // Determiner
-        Gray,       // Conjunction
+        LightBlue, // Determiner
+        Gray // Conjunction
     }
 
     public enum FontStyle
     {
-        Default, Bold, Italic
+        Default,
+        Bold,
+        Italic
     }
 
     public interface IDisplay
     {
         void Print(string text, FontColor color = FontColor.Black, FontStyle style = FontStyle.Default);
-        void PrintLine();
         void PrintSpace();
     }
 }

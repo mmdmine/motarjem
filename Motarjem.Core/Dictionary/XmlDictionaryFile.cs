@@ -12,40 +12,42 @@ namespace Motarjem.Core.Dictionary
             Document = XDocument.Load(path);
         }
 
-        public IEnumerable<Word> Adjs =>
+        private XDocument Document { get; }
+
+        public IEnumerable<Word> Adjectives =>
             from word in Document
-            .Element(XName.Get("words"))
-            ?.Elements(XName.Get("adjective"))
+                .Element(XName.Get("words"))
+                ?.Elements(XName.Get("adjective"))
             select ParseWord(word);
 
-        public IEnumerable<Word> Conjs =>
+        public IEnumerable<Word> Conjunctions =>
             from word in Document
-            .Element(XName.Get("words"))
-            ?.Elements(XName.Get("conjunction"))
+                .Element(XName.Get("words"))
+                ?.Elements(XName.Get("conjunction"))
             select ParseWord(word);
 
-        public IEnumerable<Word> Dets =>
+        public IEnumerable<Word> Determiners =>
             from word in Document
-            .Element(XName.Get("words"))
-            ?.Elements(XName.Get("determiner"))
+                .Element(XName.Get("words"))
+                ?.Elements(XName.Get("determiner"))
             select ParseWord(word);
 
         public IEnumerable<Word> Nouns =>
             from word in Document
-            .Element(XName.Get("words"))
-            ?.Elements(XName.Get("noun"))
+                .Element(XName.Get("words"))
+                ?.Elements(XName.Get("noun"))
             select ParseWord(word);
 
         public IEnumerable<Word> Pronouns =>
             from word in Document
-            .Element(XName.Get("words"))
-            ?.Elements(XName.Get("pronoun"))
+                .Element(XName.Get("words"))
+                ?.Elements(XName.Get("pronoun"))
             select ParseWord(word);
 
         public IEnumerable<Word> Verbs =>
             from word in Document
-            .Element(XName.Get("words"))
-            ?.Elements("verb")
+                .Element(XName.Get("words"))
+                ?.Elements("verb")
             select ParseWord(word);
 
 
@@ -55,9 +57,9 @@ namespace Motarjem.Core.Dictionary
             {
                 // if there's a 'pos' attribute, use it
                 // otherwise use tag name
-                Pos = x.Attributes().Any(a => a.Name == "pos") ?
-                    GetEnum<PartsOfSpeech>("pos", x) :
-                    (PartsOfSpeech)Enum.Parse(typeof(PartsOfSpeech), x.Name.LocalName, true),
+                Pos = x.Attributes().Any(a => a.Name == "pos")
+                    ? GetEnum<PartsOfSpeech>("pos", x)
+                    : (PartsOfSpeech) Enum.Parse(typeof(PartsOfSpeech), x.Name.LocalName, true),
                 English = GetAttribute("en", x),
                 Persian = GetAttribute("fa", x),
                 Persian2 = GetAttribute("fav", x),
@@ -73,7 +75,7 @@ namespace Motarjem.Core.Dictionary
                 word.Count = PersonCount.Singular;
             return word;
         }
-        
+
         private static string GetAttribute(string attribute, XElement x)
         {
             var matches = x.Attributes(XName.Get(attribute)).ToArray();
@@ -83,15 +85,13 @@ namespace Motarjem.Core.Dictionary
                 throw new Exception(); // data error
             return matches[0].Value;
         }
-        
+
         private static T GetEnum<T>(string attribute, XElement x)
         {
             var value = GetAttribute(attribute, x);
             if (value == null)
                 return default(T);
-            return (T)Enum.Parse(typeof(T), value, true);
+            return (T) Enum.Parse(typeof(T), value, true);
         }
-
-        private XDocument Document { get; }
     }
 }

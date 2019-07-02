@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Motarjem.Core.Dictionary;
 
 namespace Motarjem.Core.Phrases
@@ -27,15 +27,14 @@ namespace Motarjem.Core.Phrases
                 default:
                     throw new UnexpectedWord(words.Dequeue()[0].English);
             }
+
             // Noun + Conj. + Noun e.g. Ali and Reza
             if (words.Any() &&
                 words.Peek()[0].Pos == PartsOfSpeech.Conjunction &&
                 !child)
-            {
                 // TODO: Ambigous:
                 // [Ali wrote [books and letters]] and [Reza read them].
                 result = ConjNoun.ParseEnglish(result, words);
-            }
             return result;
         }
     }

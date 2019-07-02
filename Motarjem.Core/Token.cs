@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Motarjem.Core
 {
@@ -16,11 +14,12 @@ namespace Motarjem.Core
             Comma,
             Exclamation,
             QuestionMark,
-            Undefined,
+            Undefined
         }
 
+        public char Character;
+
         public Type TokenType;
-        public char Charactor;
 
         private static Type GetTokenType(char c)
         {
@@ -41,15 +40,19 @@ namespace Motarjem.Core
                 case '؟':
                 case '?':
                     return Type.QuestionMark;
+                default:
+                    if (c >= 'a' && c <= 'z' ||
+                        c >= 'A' && c <= 'Z')
+                        return Type.Alphabet;
+                    if (c >= '0' && c <= '9')
+                        return Type.Digit;
+                    return Type.Undefined;
             }
-            if ((c >= 'a' && c <= 'z') ||
-                (c >= 'A' && c <= 'Z'))
-                return Type.Alphabet;
-            if (c >= '0' && c <= '9')
-                return Type.Digit;
-            return Type.Undefined;
         }
 
-        public static IEnumerable<Token> Tokenize(IEnumerable<char> chars) => from c in chars select new Token { TokenType = GetTokenType(c), Charactor = c };
+        public static IEnumerable<Token> Tokenize(IEnumerable<char> chars)
+        {
+            return from c in chars select new Token {TokenType = GetTokenType(c), Character = c};
+        }
     }
 }

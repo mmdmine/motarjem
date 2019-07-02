@@ -6,6 +6,8 @@ namespace Motarjem.Core.Dictionary
 {
     public class Word
     {
+        private static EnglishDictionary _dictionary;
+        
         internal string English = "";
         internal string Persian = "";
         internal string Persian2 = "";
@@ -14,7 +16,7 @@ namespace Motarjem.Core.Dictionary
         internal Person Person = Person.All;
         internal PersonCount Count = PersonCount.All;
         internal PersonSex Sex = PersonSex.All;
-        internal PronounType PronounType = PronounType.None;
+        internal PronounType PronounType = PronounType.None; // TODO: Subjective and Objective Pronouns
         internal VerbTense Tense = VerbTense.None;
 
         public bool IsNoun =>
@@ -22,15 +24,10 @@ namespace Motarjem.Core.Dictionary
             Pos == PartsOfSpeech.Pronoun ||
             Pos == PartsOfSpeech.ProperNoun;
 
-        public bool IsVerb
-        {
-            get
-            {
-                return Pos == PartsOfSpeech.Verb ||
-                    Pos == PartsOfSpeech.AuxiliaryVerb ||
-                    Pos == PartsOfSpeech.ToBe;
-            }
-        }
+        public bool IsVerb =>
+            Pos == PartsOfSpeech.Verb ||
+            Pos == PartsOfSpeech.AuxiliaryVerb ||
+            Pos == PartsOfSpeech.ToBe;
 
         public static void OpenDictionary(IDictionaryFile file)
         {
@@ -41,49 +38,61 @@ namespace Motarjem.Core.Dictionary
         {
             var str = new StringBuilder();
             while (tokens.Any())
-            {
                 if (tokens.Peek().TokenType == Token.Type.Alphabet ||
                     tokens.Peek().TokenType == Token.Type.Digit)
-                    str.Append(tokens.Dequeue().Charactor);
+                {
+                    str.Append(tokens.Dequeue().Character);
+                }
                 else
                 {
                     if (tokens.Peek().TokenType == Token.Type.Space)
                         tokens.Dequeue();
                     break;
                 }
-            }
+
             var matches = _dictionary.Lookup(str.ToString()).ToArray();
             if (!matches.Any())
                 throw new UndefinedWord(str.ToString());
             return matches;
         }
-
-        private static EnglishDictionary _dictionary;
     }
 
     internal enum PartsOfSpeech
     {
-        Noun, Pronoun, ProperNoun,
-        Verb, AuxiliaryVerb, ToBe,
-        Adjective, Adverb,
-        Conjunction, Determiner,
+        Noun,
+        Pronoun,
+        ProperNoun,
+        Verb,
+        AuxiliaryVerb,
+        ToBe,
+        Adjective,
+        Adverb,
+        Conjunction,
+        Determiner,
         Preposition,
-        Number,
+        Number
     }
 
     internal enum Person
     {
-        All, First, Second, Third
+        All,
+        First,
+        Second,
+        Third
     }
 
     internal enum PersonCount
     {
-        All, Singular, Plural
+        All,
+        Singular,
+        Plural
     }
 
     internal enum PersonSex
     {
-        All, Male, Female
+        All,
+        Male,
+        Female
     }
 
     internal enum VerbTense
@@ -91,7 +100,7 @@ namespace Motarjem.Core.Dictionary
         None,
         Present,
         Past,
-        PastParticiple,
+        PastParticiple
     }
 
     internal enum PronounType

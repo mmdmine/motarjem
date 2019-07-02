@@ -4,17 +4,17 @@ namespace Motarjem.Core
 {
     public abstract class MotarjemException : Exception
     {
-        public string MessageFa { get; }
-
-        public MotarjemException(string english, string persian) : base(english)
+        protected MotarjemException(string english, string persian) : base(english)
         {
             MessageFa = persian;
         }
+
+        public string MessageFa { get; }
     }
 
     internal class UnexpectedEnd : MotarjemException
     {
-        public UnexpectedEnd() : 
+        public UnexpectedEnd() :
             base("Unexpected end of sentence", "پایان غیر منتظره جمله")
         {
         }
@@ -36,9 +36,9 @@ namespace Motarjem.Core
         }
     }
 
-    internal class GrammerError : MotarjemException
+    internal class GrammarError : MotarjemException
     {
-        public GrammerError(string word) :
+        public GrammarError(string word) :
             base($"Grammer Error at '{word}'", $"خطای گرامری در '{word}'")
         {
         }

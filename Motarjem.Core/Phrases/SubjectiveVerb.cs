@@ -2,8 +2,8 @@
 {
     internal class SubjectiveVerb : VerbPhrase
     {
-        public VerbPhrase ToBe;
         public NounPhrase Status;
+        public VerbPhrase ToBe;
 
         protected override void DisplayEnglish(IDisplay display)
         {

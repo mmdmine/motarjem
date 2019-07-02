@@ -1,41 +1,43 @@
 ﻿using Gtk;
 using Motarjem.Core;
+using Pango;
+using Style = Pango.Style;
 
 namespace Motarjem
 {
     public class TextDisplay : IDisplay
     {
         private static readonly TextTag ColorBlack =
-            new TextTag("color_black") { Foreground = "black" };
+            new TextTag("color_black") {Foreground = "black"};
 
         private static readonly TextTag ColorRed =
-            new TextTag("color_red") { Foreground = "red" };
+            new TextTag("color_red") {Foreground = "red"};
 
         private static readonly TextTag ColorBlue =
-            new TextTag("color_blue") { Foreground = "blue" };
+            new TextTag("color_blue") {Foreground = "blue"};
 
         private static readonly TextTag ColorGreen =
-            new TextTag("color_green") { Foreground = "green" };
+            new TextTag("color_green") {Foreground = "green"};
 
         private static readonly TextTag ColorGray =
-            new TextTag("color_gray") { Foreground = "gray" };
+            new TextTag("color_gray") {Foreground = "gray"};
 
         private static readonly TextTag Normal =
-            new TextTag("normal") { Weight = Pango.Weight.Normal };
+            new TextTag("normal") {Weight = Weight.Normal};
 
         private static readonly TextTag Bold =
-            new TextTag("bold") { Weight = Pango.Weight.Bold };
+            new TextTag("bold") {Weight = Weight.Bold};
 
         private static readonly TextTag Italic =
-            new TextTag("italic") { Style = Pango.Style.Italic };
+            new TextTag("italic") {Style = Style.Italic};
+
+        private readonly TextBuffer _buffer;
 
         private readonly TextTag _textSize =
-            new TextTag("size_normal") { SizePoints = 16 };
-        
-        private readonly TextBuffer _buffer;
+            new TextTag("size_normal") {SizePoints = 16};
+
         private TextIter _iter;
-        
-        
+
 
         public TextDisplay(TextBuffer tb)
         {
@@ -56,7 +58,7 @@ namespace Motarjem
         {
             _buffer.InsertWithTags(ref _iter, text, GetColor(color), GetStyle(style), _textSize);
         }
-        
+
         private static TextTag GetColor(FontColor color)
         {
             switch (color)
@@ -69,7 +71,7 @@ namespace Motarjem
                     return ColorGreen;
                 case FontColor.Gray:
                     return ColorGray;
-                case FontColor.LightRed:
+                case FontColor.LightRed: //TODO
                 case FontColor.LightGreen:
                 case FontColor.LightBlue:
                 case FontColor.Black:
@@ -77,7 +79,7 @@ namespace Motarjem
                     return ColorBlack;
             }
         }
-        
+
         private static TextTag GetStyle(FontStyle style)
         {
             switch (style)
@@ -91,15 +93,15 @@ namespace Motarjem
                     return Italic;
             }
         }
+        
+        public void PrintSpace()
+        {
+            _buffer.InsertWithTags(ref _iter, " ", _textSize);
+        }
 
         public void PrintLine()
         {
             _buffer.InsertWithTags(ref _iter, "\n", _textSize);
-        }
-
-        public void PrintSpace()
-        {
-            _buffer.InsertWithTags(ref _iter, " ", _textSize);
         }
 
         public void Clear()
