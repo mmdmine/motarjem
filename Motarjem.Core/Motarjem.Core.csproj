@@ -73,7 +73,6 @@
     <Compile Include="Dictionary\Dictionary.cs" />
     <Compile Include="Phrases\VerbPhrase.cs" />
     <Compile Include="Dictionary\Word.cs" />
-    <Compile Include="Dictionary\XmlDictionaryFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -100,10 +99,6 @@
     <None Include="packages.config" />
     <None Include="words.sqlite3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="words.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup />
