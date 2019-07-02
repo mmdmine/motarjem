@@ -13,7 +13,7 @@ namespace Motarjem
         {
             // MainWindow
             DefaultWidth = 600;
-            DefaultHeight = 400;
+            DefaultHeight = 300;
 
             // src
             _src = new Entry {Text = "I am a program."};
@@ -26,18 +26,9 @@ namespace Motarjem
             button.Clicked += Button_Clicked;
 
             // hBox
-            var hBox = new Box(Orientation.Horizontal, 2);
-            hBox.PackStart(_src, true, true, 2);
-            hBox.PackStart(button, false, false, 2);
-
-            // headerBar
-            var headerBar = new HeaderBar
-            {
-                ShowCloseButton = true
-            };
-            headerBar.PackStart(hBox);
-            headerBar.Title = "Motarjem";
-            Titlebar = headerBar;
+            var hBox = new Box(Orientation.Horizontal, 0);
+            hBox.PackStart(_src, true, true, 5);
+            hBox.PackStart(button, false, false, 5);
 
             // output
             var output = new TextView();
@@ -45,7 +36,12 @@ namespace Motarjem
             {
                 output
             };
-            Add(scrolledOutput);
+
+            // vBox
+            var vBox = new Box(Orientation.Vertical, 2);
+            vBox.PackStart(hBox, false, false, 2);
+            vBox.PackStart(scrolledOutput, true, true, 2);
+            Add(vBox); // Add vBox to Window
 
             // Setup Display for Translator
             _display = new TextDisplay(output.Buffer);
