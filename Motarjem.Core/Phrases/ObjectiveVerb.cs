@@ -2,23 +2,23 @@
 {
     internal class ObjectiveVerb : VerbPhrase
     {
-        public VerbPhrase action;
-        public NounPhrase objectNoun;
+        public VerbPhrase Action;
+        public NounPhrase ObjectNoun;
 
         protected override void DisplayEnglish(IDisplay display)
         {
-            action.Display(display, Language.English);
-            objectNoun.Display(display, Language.English);
+            Action.Display(display, Language.English);
+            ObjectNoun.Display(display, Language.English);
         }
 
         protected override void DisplayPersian(IDisplay display)
         {
-            objectNoun.Display(display, Language.Persian);
+            ObjectNoun.Display(display, Language.Persian);
 
             display.Print("را", FontColor.Gray);
             display.PrintSpace();
 
-            action.Display(display, Language.Persian);
+            Action.Display(display, Language.Persian);
         }
     }
 }

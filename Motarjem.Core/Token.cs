@@ -19,8 +19,8 @@ namespace Motarjem.Core
             Undefined,
         }
 
-        public Type type;
-        public char charactor;
+        public Type TokenType;
+        public char Charactor;
 
         private static Type GetTokenType(char c)
         {
@@ -50,6 +50,6 @@ namespace Motarjem.Core
             return Type.Undefined;
         }
 
-        public static IEnumerable<Token> Tokenize(IEnumerable<char> chars) => from c in chars select new Token { type = GetTokenType(c), charactor = c };
+        public static IEnumerable<Token> Tokenize(IEnumerable<char> chars) => from c in chars select new Token { TokenType = GetTokenType(c), Charactor = c };
     }
 }

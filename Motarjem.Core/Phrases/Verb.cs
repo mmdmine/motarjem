@@ -4,29 +4,29 @@ namespace Motarjem.Core.Phrases
 {
     internal class Verb : VerbPhrase
     {
-        public Word word;
-        public VerbPhraseTense tense;
+        public Word Word;
+        public VerbPhraseTense Tense;
 
         protected override void DisplayEnglish(IDisplay display)
         {
-            display.Print(word.english, FontColor.Green);
+            display.Print(Word.English, FontColor.Green);
             display.PrintSpace();
         }
 
         protected override void DisplayPersian(IDisplay display)
         {
-            if (tense == VerbPhraseTense.SimplePresent &&
-                string.IsNullOrWhiteSpace(word.persian_2))
+            if (Tense == VerbPhraseTense.SimplePresent &&
+                string.IsNullOrWhiteSpace(Word.Persian2))
                 display.Print("می", FontColor.Green);
-            display.Print(word.persian, FontColor.Green);
-            if (!string.IsNullOrWhiteSpace(word.persian_2))
+            display.Print(Word.Persian, FontColor.Green);
+            if (!string.IsNullOrWhiteSpace(Word.Persian2))
             {
-                if (tense == VerbPhraseTense.SimplePresent)
+                if (Tense == VerbPhraseTense.SimplePresent)
                     display.Print("می", FontColor.Green);
-                display.Print(word.persian_2, FontColor.Green);
+                display.Print(Word.Persian2, FontColor.Green);
             }
-            if (!string.IsNullOrWhiteSpace(word.persian_verb_identifier))
-                display.Print(word.persian_verb_identifier, FontColor.Green);
+            if (!string.IsNullOrWhiteSpace(Word.PersianVerbIdentifier))
+                display.Print(Word.PersianVerbIdentifier, FontColor.Green);
             display.PrintSpace();
         }
     }

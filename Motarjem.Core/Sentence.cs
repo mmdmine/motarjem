@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Motarjem.Core.Dictionary;
+using Motarjem.Core.Sentences;
 
 namespace Motarjem.Core
 {
@@ -13,7 +14,7 @@ namespace Motarjem.Core
 
     public abstract class Sentence
     {
-        public Language language;
+        protected Language Language;
 
         public abstract void Display(IDisplay display);
         public abstract Sentence Translate();
@@ -24,7 +25,7 @@ namespace Motarjem.Core
             var words = new Queue<Word[]>();
             while (tokens.Any())
             {
-                switch (tokens.Peek().type)
+                switch (tokens.Peek().TokenType)
                 {
                     case Token.Type.Dot:
                         tokens.Dequeue();
@@ -59,14 +60,14 @@ namespace Motarjem.Core
             Sentence sentence = SimpleSentence.ParseEnglish(words);
             
             // Conjunction Sentence: S1 + and + S2
-            if (words.Any() && words.Peek()[0].pos == PartsOfSpeech.Conjunction)
+            if (words.Any() && words.Peek()[0].Pos == PartsOfSpeech.Conjunction)
             {
                 sentence = ConjSentence.ParseEnglish(sentence, words);
             }
             
             // Is any word left?
             if (words.Any())
-                throw new UnexpectedWord(words.Dequeue()[0].english);
+                throw new UnexpectedWord(words.Dequeue()[0].English);
 
             return sentence;
         }

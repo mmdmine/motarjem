@@ -5,95 +5,107 @@ namespace Motarjem
 {
     public class TextDisplay : IDisplay
     {
-        public static readonly TextTag Color_Black =
+        private static readonly TextTag ColorBlack =
             new TextTag("color_black") { Foreground = "black" };
-        public static readonly TextTag Color_Red =
+
+        private static readonly TextTag ColorRed =
             new TextTag("color_red") { Foreground = "red" };
-        public static readonly TextTag Color_Blue =
+
+        private static readonly TextTag ColorBlue =
             new TextTag("color_blue") { Foreground = "blue" };
-        public static readonly TextTag Color_Green =
+
+        private static readonly TextTag ColorGreen =
             new TextTag("color_green") { Foreground = "green" };
-        public static readonly TextTag Color_Gray =
+
+        private static readonly TextTag ColorGray =
             new TextTag("color_gray") { Foreground = "gray" };
-        public static readonly TextTag Normal =
+
+        private static readonly TextTag Normal =
             new TextTag("normal") { Weight = Pango.Weight.Normal };
-        public static readonly TextTag Bold =
+
+        private static readonly TextTag Bold =
             new TextTag("bold") { Weight = Pango.Weight.Bold };
-        public static readonly TextTag Italic =
+
+        private static readonly TextTag Italic =
             new TextTag("italic") { Style = Pango.Style.Italic };
 
-        private readonly TextBuffer buffer;
-        private TextIter iter;
-        private TextTag textSize =
+        private readonly TextTag _textSize =
             new TextTag("size_normal") { SizePoints = 16 };
+        
+        private readonly TextBuffer _buffer;
+        private TextIter _iter;
+        
+        
 
         public TextDisplay(TextBuffer tb)
         {
-            buffer = tb;
-            iter = buffer.StartIter;
-            buffer.TagTable.Add(textSize);
-            buffer.TagTable.Add(Normal);
-            buffer.TagTable.Add(Bold);
-            buffer.TagTable.Add(Italic);
-            buffer.TagTable.Add(Color_Black);
-            buffer.TagTable.Add(Color_Blue);
-            buffer.TagTable.Add(Color_Gray);
-            buffer.TagTable.Add(Color_Green);
-            buffer.TagTable.Add(Color_Red);
+            _buffer = tb;
+            _iter = _buffer.StartIter;
+            _buffer.TagTable.Add(_textSize);
+            _buffer.TagTable.Add(Normal);
+            _buffer.TagTable.Add(Bold);
+            _buffer.TagTable.Add(Italic);
+            _buffer.TagTable.Add(ColorBlack);
+            _buffer.TagTable.Add(ColorBlue);
+            _buffer.TagTable.Add(ColorGray);
+            _buffer.TagTable.Add(ColorGreen);
+            _buffer.TagTable.Add(ColorRed);
         }
 
         public void Print(string text, FontColor color = FontColor.Black, FontStyle style = FontStyle.Default)
         {
-            TextTag getColor()
+            _buffer.InsertWithTags(ref _iter, text, GetColor(color), GetStyle(style), _textSize);
+        }
+        
+        private static TextTag GetColor(FontColor color)
+        {
+            switch (color)
             {
-                switch (color)
-                {
-                    case FontColor.Red:
-                        return Color_Red;
-                    case FontColor.Blue:
-                        return Color_Blue;
-                    case FontColor.Green:
-                        return Color_Green;
-                    case FontColor.Gray:
-                        return Color_Gray;
-                    case FontColor.LightRed:
-                    case FontColor.LightGreen:
-                    case FontColor.LightBlue:
-                    case FontColor.Black:
-                    default:
-                        return Color_Black;
-                }
+                case FontColor.Red:
+                    return ColorRed;
+                case FontColor.Blue:
+                    return ColorBlue;
+                case FontColor.Green:
+                    return ColorGreen;
+                case FontColor.Gray:
+                    return ColorGray;
+                case FontColor.LightRed:
+                case FontColor.LightGreen:
+                case FontColor.LightBlue:
+                case FontColor.Black:
+                default:
+                    return ColorBlack;
             }
-            TextTag getStyle()
+        }
+        
+        private static TextTag GetStyle(FontStyle style)
+        {
+            switch (style)
             {
-                switch (style)
-                {
-                    case FontStyle.Default:
-                    default:
-                        return Normal;
-                    case FontStyle.Bold:
-                        return Bold;
-                    case FontStyle.Italic:
-                        return Italic;
-                }
+                case FontStyle.Default:
+                default:
+                    return Normal;
+                case FontStyle.Bold:
+                    return Bold;
+                case FontStyle.Italic:
+                    return Italic;
             }
-            buffer.InsertWithTags(ref iter, text, getColor(), getStyle(), textSize);
         }
 
         public void PrintLine()
         {
-            buffer.InsertWithTags(ref iter, "\n", textSize);
+            _buffer.InsertWithTags(ref _iter, "\n", _textSize);
         }
 
         public void PrintSpace()
         {
-            buffer.InsertWithTags(ref iter, " ", textSize);
+            _buffer.InsertWithTags(ref _iter, " ", _textSize);
         }
 
         public void Clear()
         {
-            buffer.Clear();
-            iter = buffer.StartIter;
+            _buffer.Clear();
+            _iter = _buffer.StartIter;
         }
     }
 }

@@ -2,19 +2,19 @@
 {
     internal class SubjectiveVerb : VerbPhrase
     {
-        public VerbPhrase toBe;
-        public NounPhrase status;
+        public VerbPhrase ToBe;
+        public NounPhrase Status;
 
         protected override void DisplayEnglish(IDisplay display)
         {
-            toBe.Display(display, Language.English);
-            status.Display(display, Language.English);
+            ToBe.Display(display, Language.English);
+            Status.Display(display, Language.English);
         }
 
         protected override void DisplayPersian(IDisplay display)
         {
-            status.Display(display, Language.Persian);
-            toBe.Display(display, Language.Persian);
+            Status.Display(display, Language.Persian);
+            ToBe.Display(display, Language.Persian);
         }
     }
 }

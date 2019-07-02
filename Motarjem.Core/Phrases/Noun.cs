@@ -6,38 +6,38 @@ namespace Motarjem.Core.Phrases
 {
     internal class Noun : NounPhrase
     {
-        public Word word;
+        public Word Word;
 
         protected override void DisplayEnglish(IDisplay display)
         {
-            if (word.pos == PartsOfSpeech.Pronoun)
+            if (Word.Pos == PartsOfSpeech.Pronoun)
             {
-                display.Print(word.english, FontColor.Blue, FontStyle.Italic);
+                display.Print(Word.English, FontColor.Blue, FontStyle.Italic);
             }
-            else if (word.pos == PartsOfSpeech.ProperNoun)
+            else if (Word.Pos == PartsOfSpeech.ProperNoun)
             {
-                display.Print(word.english, FontColor.Black, FontStyle.Bold);
+                display.Print(Word.English, FontColor.Black, FontStyle.Bold);
             }
             else
             {
-                display.Print(word.english);
+                display.Print(Word.English);
             }
             display.PrintSpace();
         }
 
         protected override void DisplayPersian(IDisplay display)
         {
-            if (word.pos == PartsOfSpeech.Pronoun)
+            if (Word.Pos == PartsOfSpeech.Pronoun)
             {
-                display.Print(word.persian, FontColor.Blue, FontStyle.Italic);
+                display.Print(Word.Persian, FontColor.Blue, FontStyle.Italic);
             }
-            else if (word.pos == PartsOfSpeech.ProperNoun)
+            else if (Word.Pos == PartsOfSpeech.ProperNoun)
             {
-                display.Print(word.persian, FontColor.Black, FontStyle.Bold);
+                display.Print(Word.Persian, FontColor.Black, FontStyle.Bold);
             }
             else
             {
-                display.Print(word.persian);
+                display.Print(Word.Persian);
             }
             display.PrintSpace();
         }
@@ -46,7 +46,7 @@ namespace Motarjem.Core.Phrases
         {
             return new Noun
             {
-                word = words.Dequeue().First(a => a.IsNoun)
+                Word = words.Dequeue().First(a => a.IsNoun)
             };
         }
     }

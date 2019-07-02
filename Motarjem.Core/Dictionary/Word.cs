@@ -6,34 +6,29 @@ namespace Motarjem.Core.Dictionary
 {
     public class Word
     {
-        internal string english = "";
-        internal string persian = "";
-        internal string persian_2 = "";
-        internal string persian_verb_identifier = "";
-        internal PartsOfSpeech pos = PartsOfSpeech.Noun;
-        internal Person person = Person.All;
-        internal PersonCount count = PersonCount.All;
-        internal PersonSex sex = PersonSex.All;
-        internal PronounType pronounType = PronounType.None;
-        internal VerbTense tense = VerbTense.None;
+        internal string English = "";
+        internal string Persian = "";
+        internal string Persian2 = "";
+        internal string PersianVerbIdentifier = "";
+        internal PartsOfSpeech Pos = PartsOfSpeech.Noun;
+        internal Person Person = Person.All;
+        internal PersonCount Count = PersonCount.All;
+        internal PersonSex Sex = PersonSex.All;
+        internal PronounType PronounType = PronounType.None;
+        internal VerbTense Tense = VerbTense.None;
 
-        public bool IsNoun
-        {
-            get
-            {
-                return pos == PartsOfSpeech.Noun ||
-                    pos == PartsOfSpeech.Pronoun ||
-                    pos == PartsOfSpeech.ProperNoun;
-            }
-        }
+        public bool IsNoun =>
+            Pos == PartsOfSpeech.Noun ||
+            Pos == PartsOfSpeech.Pronoun ||
+            Pos == PartsOfSpeech.ProperNoun;
 
         public bool IsVerb
         {
             get
             {
-                return pos == PartsOfSpeech.Verb ||
-                    pos == PartsOfSpeech.AuxiliaryVerb ||
-                    pos == PartsOfSpeech.ToBe;
+                return Pos == PartsOfSpeech.Verb ||
+                    Pos == PartsOfSpeech.AuxiliaryVerb ||
+                    Pos == PartsOfSpeech.ToBe;
             }
         }
 
@@ -47,20 +42,20 @@ namespace Motarjem.Core.Dictionary
             var str = new StringBuilder();
             while (tokens.Any())
             {
-                if (tokens.Peek().type == Token.Type.Alphabet ||
-                    tokens.Peek().type == Token.Type.Digit)
-                    str.Append(tokens.Dequeue().charactor);
+                if (tokens.Peek().TokenType == Token.Type.Alphabet ||
+                    tokens.Peek().TokenType == Token.Type.Digit)
+                    str.Append(tokens.Dequeue().Charactor);
                 else
                 {
-                    if (tokens.Peek().type == Token.Type.Space)
+                    if (tokens.Peek().TokenType == Token.Type.Space)
                         tokens.Dequeue();
                     break;
                 }
             }
-            var matches = _dictionary.Lookup(str.ToString());
+            var matches = _dictionary.Lookup(str.ToString()).ToArray();
             if (!matches.Any())
                 throw new UndefinedWord(str.ToString());
-            return matches.ToArray();
+            return matches;
         }
 
         private static EnglishDictionary _dictionary;

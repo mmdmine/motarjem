@@ -12,16 +12,16 @@ namespace Motarjem.Core.Phrases
             if (words.Peek().Any(a => a.IsVerb))
             {
                 var word = words.Dequeue();
-                var verb = new Verb { word = word[0] };
+                var verb = new Verb { Word = word[0] };
                 // Personality
                 // lookup for special verbs
                 var matches = from v in word
-                              where v.IsVerb && v.person == subject.person && v.count == subject.count
+                              where v.IsVerb && v.Person == subject.Person && v.Count == subject.Count
                               select v;
                 if (matches.Count() == 1)
                 {
                     // exactly one match
-                    verb.word = matches.SingleOrDefault();
+                    verb.Word = matches.SingleOrDefault();
                 }
                 else if (matches.Count() > 1)
                 {
@@ -29,90 +29,86 @@ namespace Motarjem.Core.Phrases
                 }
 
                 // generate Persian Verb
-                if (string.IsNullOrWhiteSpace(verb.word.persian_verb_identifier))
-                    verb.word.persian_verb_identifier = FindPersianIdentifier();
-
-                string FindPersianIdentifier()
+                var findPersianIdentifier = new Func<string>(() =>
                 {
-                    if (subject.count == PersonCount.Singular)
+                    switch (subject.Count)
                     {
-                        switch (subject.person)
-                        {
-                            default:
-                            case Person.All:
-                            case Person.Third:
-                                throw new Exception(); // TODO?
-                            case Person.First:
-                                return "م";
-                            case Person.Second:
-                                return "ی";
-                        }
+                        case PersonCount.Singular:
+                            switch (subject.Person)
+                            {
+                                default:
+                                    throw new Exception(); // TODO?
+                                case Person.First:
+                                    return "م";
+                                case Person.Second:
+                                    return "ی";
+                            }
+
+                        case PersonCount.Plural:
+                            switch (subject.Person)
+                            {
+                                default:
+                                    throw new Exception(); // TODO?
+                                case Person.First:
+                                    return "یم";
+                                case Person.Second:
+                                    return "ید";
+                                case Person.Third:
+                                    return "ند";
+                            }
+
+                        default:
+                            throw new Exception(); // TODO?
                     }
-                    else if (subject.count == PersonCount.Plural)
-                    {
-                        switch (subject.person)
-                        {
-                            default:
-                            case Person.All:
-                                throw new Exception(); // TODO?
-                            case Person.First:
-                                return "یم";
-                            case Person.Second:
-                                return "ید";
-                            case Person.Third:
-                                return "ند";
-                        }
-                    }
-                    else
-                    {
-                        throw new Exception(); // TODO?
-                    }
-                }
+                });
+                
+                if (string.IsNullOrWhiteSpace(verb.Word.PersianVerbIdentifier))
+                    verb.Word.PersianVerbIdentifier = findPersianIdentifier();
 
                 // Tense
-                if (verb.word.pos == PartsOfSpeech.ToBe)
+                if (verb.Word.Pos == PartsOfSpeech.ToBe)
                 {
                     // Noun + To Be + Adjective/Noun
-                    verb.tense = VerbPhraseTense.Subjective;
+                    verb.Tense = VerbPhraseTense.Subjective;
                 }
-                else if (verb.word.tense == VerbTense.Present)
+                else if (verb.Word.Tense == VerbTense.Present)
                 {
                     // Noun + Verb
-                    verb.tense = VerbPhraseTense.SimplePresent;
+                    verb.Tense = VerbPhraseTense.SimplePresent;
                 }
-                else if (verb.word.tense == VerbTense.Past)
+                else if (verb.Word.Tense == VerbTense.Past)
                 {
                     // Noun + Past Verb
-                    verb.tense = VerbPhraseTense.SimplePast;
+                    verb.Tense = VerbPhraseTense.SimplePast;
                 }
                 else
                 {
                     // Undefined Grammer
-                    throw new GrammerError(verb.word.english);
+                    throw new GrammerError(verb.Word.English);
                 }
 
                 // Object
                 if (!words.Any())
                     return verb; // no more words left for object.
 
-                if (verb.tense == VerbPhraseTense.Subjective && (
+                if (verb.Tense == VerbPhraseTense.Subjective && (
                     words.Peek().Any(a => a.IsNoun)
-                    || words.Peek().Any(a => a.pos == PartsOfSpeech.Determiner)
-                    || words.Peek().Any(a => a.pos == PartsOfSpeech.Adjective)))
+                    || words.Peek().Any(a => a.Pos == PartsOfSpeech.Determiner)
+                    || words.Peek().Any(a => a.Pos == PartsOfSpeech.Adjective)))
                 {
                     return new SubjectiveVerb
                     {
-                        toBe = verb,
-                        status = NounPhrase.ParseEnglish(words)
+                        ToBe = verb,
+                        Status = NounPhrase.ParseEnglish(words)
                     };
                 }
                 else if (words.Peek().Any(a => a.IsNoun)
-                    || words.Peek().Any(a => a.pos == PartsOfSpeech.Determiner))
+                    || words.Peek().Any(a => a.Pos == PartsOfSpeech.Determiner))
                 {
                     return new ObjectiveVerb
                     {
-                        action = verb,
-                        objectNoun = NounPhrase.ParseEnglish(words)
+                        Action = verb,
+                        ObjectNoun = NounPhrase.ParseEnglish(words)
                     };
                 }
 
@@ -120,7 +116,7 @@ namespace Motarjem.Core.Phrases
             }
             else
             {
-                throw new UnexpectedWord(words.Dequeue()[0].english);
+                throw new UnexpectedWord(words.Dequeue()[0].English);
             }
         }
     }

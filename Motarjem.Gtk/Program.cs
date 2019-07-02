@@ -15,7 +15,7 @@ namespace Motarjem
                     "words.sqlite3")));
 
             var app = new Application("mmdmine.motarjem.gtk", GLib.ApplicationFlags.None);
-            app.Activated += (sender, event_args) =>
+            app.Activated += (sender, eventArgs) =>
             {
                 app.AddWindow(new MainWindow());
             };

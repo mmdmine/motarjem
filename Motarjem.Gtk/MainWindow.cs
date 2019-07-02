@@ -13,40 +13,40 @@ namespace Motarjem
             DefaultHeight = 400;
 
             // src
-            src = new Entry();
-            src.Text = "I am a program.";
+            _src = new Entry();
+            _src.Text = "I am a program.";
 
             // button
-            button = new Button
+            _button = new Button
             {
                 Label = "Translate"
             };
-            button.Clicked += Button_Clicked;
+            _button.Clicked += Button_Clicked;
 
             // hBox
-            hBox = new Box(Orientation.Horizontal, 2);
-            hBox.PackStart(src, true, true, 2);
-            hBox.PackStart(button, false, false, 2);
+            _hBox = new Box(Orientation.Horizontal, 2);
+            _hBox.PackStart(_src, true, true, 2);
+            _hBox.PackStart(_button, false, false, 2);
 
             // headerBar
-            headerBar = new HeaderBar
+            _headerBar = new HeaderBar
             {
                 ShowCloseButton = true
             };
-            headerBar.PackStart(hBox);
-            headerBar.Title = "Motarjem";
-            Titlebar = headerBar;
+            _headerBar.PackStart(_hBox);
+            _headerBar.Title = "Motarjem";
+            Titlebar = _headerBar;
 
             // output
-            output = new TextView();
-            scrolledOutput = new ScrolledWindow
+            _output = new TextView();
+            _scrolledOutput = new ScrolledWindow
             {
-                output
+                _output
             };
-            Add(scrolledOutput);
+            Add(_scrolledOutput);
 
             // Setup Display for Translator
-            display = new TextDisplay(output.Buffer);
+            _display = new TextDisplay(_output.Buffer);
 
             // Show
             ShowAll();
@@ -56,28 +56,28 @@ namespace Motarjem
         {
             try
             {
-                display.Clear();
-                var sentence = Sentence.ParseEnglish(src.Buffer.Text);
+                _display.Clear();
+                var sentence = Sentence.ParseEnglish(_src.Buffer.Text);
                 foreach (var s in sentence)
                 {
-                    s.Display(display);
-                    display.PrintLine();
-                    s.Translate().Display(display);
-                    display.PrintLine();
+                    s.Display(_display);
+                    _display.PrintLine();
+                    s.Translate().Display(_display);
+                    _display.PrintLine();
                 }
             }
             catch (Exception ex)
             {
-                display.Print("Error: " + ex, FontColor.Red);
+                _display.Print("Error: " + ex, FontColor.Red);
             }
         }
 
-        private HeaderBar headerBar;
-        private Box hBox;
-        private Entry src;
-        private Button button;
-        private TextView output;
-        private ScrolledWindow scrolledOutput;
-        private TextDisplay display;
+        private HeaderBar _headerBar;
+        private Box _hBox;
+        private Entry _src;
+        private Button _button;
+        private TextView _output;
+        private ScrolledWindow _scrolledOutput;
+        private TextDisplay _display;
     }
 }

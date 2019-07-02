@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using Motarjem.Core.Phrases;
 using Motarjem.Core.Dictionary;
+using Motarjem.Core.Phrases;
 
-namespace Motarjem.Core
+namespace Motarjem.Core.Sentences
 {
     internal class SimpleSentence : Sentence
     {
-        public NounPhrase np;
-        public VerbPhrase vp;
+        private NounPhrase _np;
+        private VerbPhrase _vp;
 
         public override void Display(IDisplay display)
         {
-            np.Display(display, language);
-            vp.Display(display, language);
+            _np.Display(display, Language);
+            _vp.Display(display, Language);
 
             display.Print(".");
             display.PrintSpace();
@@ -21,14 +21,14 @@ namespace Motarjem.Core
 
         public override Sentence Translate()
         {
-            switch (language)
+            switch (Language)
             {
                 case Language.English:
                     return new SimpleSentence
                     {
-                        language = Language.Persian,
-                        np = np, //np.Translate()
-                        vp = vp, //vp.Translate()
+                        Language = Language.Persian,
+                        _np = _np, //np.Translate()
+                        _vp = _vp, //vp.Translate()
                     };
                 case Language.Persian:
                     throw new NotImplementedException();
@@ -39,61 +39,57 @@ namespace Motarjem.Core
 
         internal new static SimpleSentence ParseEnglish(Queue<Word[]> words)
         {
-            Word FindSubject(NounPhrase np)
-            {
-                if (np is Noun)
-                {
-                    var noun = np as Noun;
-                    return new Word
-                    {
-                        count = noun.word.count,
-                        person = noun.word.pos == PartsOfSpeech.Pronoun ? noun.word.person : Person.Third,
-                    };
-                }
-                if (np is DeterminerNoun)
-                {
-                    // TODO: 'a' or 'an' are singular, 'some' and ... are plural
-                    var dn = np as DeterminerNoun;
-                    return FindSubject(dn.right);
-                }
-                if (np is AdjectiveNoun)
-                {
-                    var an = np as AdjectiveNoun;
-                    return FindSubject(an.right);
-                }
-                if (np is ConjNoun)
-                {
-                    var cn = np as ConjNoun;
-                    var subject = new Word
-                    {
-                        count = PersonCount.Plural,
-                    };
-                    var left = FindSubject(cn.left);
-                    var right = FindSubject(cn.right);
-                    if (left.pos == PartsOfSpeech.Pronoun)
-                    {
-                        subject.person = left.person;
-                    }
-                    if (right.pos == PartsOfSpeech.Pronoun)
-                    {
-                        subject.person = right.person;
-                    }
-                    if (subject.person == Person.All)
-                    {
-                        subject.person = Person.Third;
-                    }
-                    return subject;
-                }
-                return null;
-            }
-
             var sentence = new SimpleSentence
             {
-                language = Language.English,
-                np = NounPhrase.ParseEnglish(words)
+                Language = Language.English,
+                _np = NounPhrase.ParseEnglish(words)
             };
-            sentence.vp = VerbPhrase.ParseEnglish(words, FindSubject(sentence.np));
+            sentence._vp = VerbPhrase.ParseEnglish(words, FindSubject(sentence._np));
             return sentence;
+        }
+        
+        private static Word FindSubject(NounPhrase np)
+        {
+            var noun = np as Noun;
+            if (noun != null)
+            {
+                return new Word
+                {
+                    Count = noun.Word.Count,
+                    Person = noun.Word.Pos == PartsOfSpeech.Pronoun ? noun.Word.Person : Person.Third,
+                };
+            }
+
+            var dn = np as DeterminerNoun;
+            if (dn != null)
+                // TODO: 'a' or 'an' are singular, 'some' and ... are plural
+                return FindSubject(dn.Right);
+
+            var an = np as AdjectiveNoun;
+            if (an != null)
+                return FindSubject(an.Right);
+
+            var cn = np as ConjNoun;
+            if (cn == null) return null;
+            var subject = new Word
+            {
+                Count = PersonCount.Plural,
+            };
+            var left = FindSubject(cn.Left);
+            var right = FindSubject(cn.Right);
+            if (left.Pos == PartsOfSpeech.Pronoun)
+            {
+                subject.Person = left.Person;
+            }
+            if (right.Pos == PartsOfSpeech.Pronoun)
+            {
+                subject.Person = right.Person;
+            }
+            if (subject.Person == Person.All)
+            {
+                subject.Person = Person.Third;
+            }
+            return subject;
         }
     }
 }

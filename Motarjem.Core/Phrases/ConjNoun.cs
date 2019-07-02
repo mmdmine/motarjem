@@ -6,37 +6,37 @@ namespace Motarjem.Core.Phrases
 {
     internal class ConjNoun : NounPhrase
     {
-        public NounPhrase left;
-        public Word conjunction;
-        public NounPhrase right;
+        public NounPhrase Left;
+        public Word Conjunction;
+        public NounPhrase Right;
 
         protected override void DisplayEnglish(IDisplay display)
         {
-            left.Display(display, Language.English);
+            Left.Display(display, Language.English);
 
-            display.Print(conjunction.english, FontColor.Gray);
+            display.Print(Conjunction.English, FontColor.Gray);
             display.PrintSpace();
 
-            right.Display(display, Language.English);
+            Right.Display(display, Language.English);
         }
 
         protected override void DisplayPersian(IDisplay display)
         {
-            left.Display(display, Language.Persian);
+            Left.Display(display, Language.Persian);
 
-            display.Print(conjunction.persian, FontColor.Gray);
+            display.Print(Conjunction.Persian, FontColor.Gray);
             display.PrintSpace();
 
-            right.Display(display, Language.Persian);
+            Right.Display(display, Language.Persian);
         }
 
         internal static ConjNoun ParseEnglish(NounPhrase left, Queue<Word[]> words)
         {
             return new ConjNoun
             {
-                left = left,
-                conjunction = words.Dequeue().First(a => a.pos == PartsOfSpeech.Conjunction),
-                right = ParseEnglish(words, true)
+                Left = left,
+                Conjunction = words.Dequeue().First(a => a.Pos == PartsOfSpeech.Conjunction),
+                Right = ParseEnglish(words, true)
             };
         }
     }

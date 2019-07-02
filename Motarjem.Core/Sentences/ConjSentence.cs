@@ -7,31 +7,31 @@ namespace Motarjem.Core
 {
     internal class ConjSentence : Sentence
     {
-        public Sentence left;
-        public Word conj;
-        public Sentence right;
+        public Sentence Left;
+        public Word Conj;
+        public Sentence Right;
 
         public override void Display(IDisplay display)
         {
-            left.Display(display);
+            Left.Display(display);
 
-            display.Print(language == Language.English ? conj.english : conj.persian, FontColor.Gray);
+            display.Print(Language == Language.English ? Conj.English : Conj.Persian, FontColor.Gray);
             display.PrintSpace();
 
-            right.Display(display);
+            Right.Display(display);
         }
 
         public override Sentence Translate()
         {
-            switch (language)
+            switch (Language)
             {
                 case Language.English:
                     return new ConjSentence
                     {
-                        language = Language.Persian,
-                        left = left.Translate(),
-                        right = right.Translate(),
-                        conj = conj
+                        Language = Language.Persian,
+                        Left = Left.Translate(),
+                        Right = Right.Translate(),
+                        Conj = Conj
                     };
                 case Language.Persian:
                     throw new NotImplementedException();
@@ -44,10 +44,10 @@ namespace Motarjem.Core
         {
             var conj = new ConjSentence
             {
-                left = left,
-                conj = words.Dequeue().First(a => a.pos == PartsOfSpeech.Conjunction),
+                Left = left,
+                Conj = words.Dequeue().First(a => a.Pos == PartsOfSpeech.Conjunction),
             };
-            conj.right = ParseEnglish(words);
+            conj.Right = ParseEnglish(words);
             return conj;
         }
     }

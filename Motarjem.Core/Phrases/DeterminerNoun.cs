@@ -6,31 +6,31 @@ namespace Motarjem.Core.Phrases
 {
     internal class DeterminerNoun : NounPhrase
     {
-        public Word determiner;
-        public NounPhrase right;
+        public Word Determiner;
+        public NounPhrase Right;
 
         protected override void DisplayEnglish(IDisplay display)
         {
-            display.Print(determiner.english, FontColor.LightBlue);
+            display.Print(Determiner.English, FontColor.LightBlue);
             display.PrintSpace();
 
-            right.Display(display, Language.English);
+            Right.Display(display, Language.English);
         }
 
         protected override void DisplayPersian(IDisplay display)
         {
-            display.Print(determiner.persian, FontColor.LightBlue);
+            display.Print(Determiner.Persian, FontColor.LightBlue);
             display.PrintSpace();
 
-            right.Display(display, Language.Persian);
+            Right.Display(display, Language.Persian);
         }
 
         internal static DeterminerNoun ParseEnglish(Queue<Word[]> words)
         {
             return new DeterminerNoun
             {
-                determiner = words.Dequeue().First(a => a.pos == PartsOfSpeech.Determiner),
-                right = ParseEnglish(words, true)
+                Determiner = words.Dequeue().First(a => a.Pos == PartsOfSpeech.Determiner),
+                Right = ParseEnglish(words, true)
             };
         }
     }

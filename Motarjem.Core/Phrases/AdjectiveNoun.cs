@@ -6,31 +6,31 @@ namespace Motarjem.Core.Phrases
 {
     internal class AdjectiveNoun : NounPhrase
     {
-        public Word adjective;
-        public NounPhrase right;
+        public Word Adjective;
+        public NounPhrase Right;
 
         protected override void DisplayEnglish(IDisplay display)
         {
-            display.Print(adjective.english, FontColor.LightRed);
+            display.Print(Adjective.English, FontColor.LightRed);
             display.PrintSpace();
 
-            right?.Display(display, Language.English);
+            Right?.Display(display, Language.English);
         }
 
         protected override void DisplayPersian(IDisplay display)
         {
-            right?.Display(display, Language.Persian);
+            Right?.Display(display, Language.Persian);
 
-            display.Print(adjective.persian, FontColor.LightRed);
+            display.Print(Adjective.Persian, FontColor.LightRed);
             display.PrintSpace();
         }
 
         internal static AdjectiveNoun ParseEnglish(Queue<Word[]> words)
         {
-            var adj = new AdjectiveNoun { adjective = words.Dequeue().First(a => a.pos == PartsOfSpeech.Adjective) };
+            var adj = new AdjectiveNoun { Adjective = words.Dequeue().First(a => a.Pos == PartsOfSpeech.Adjective) };
             if (words.Any()
                 && words.Peek().Any(a => a.IsNoun))
-                adj.right = ParseEnglish(words, true);
+                adj.Right = ParseEnglish(words, true);
             return adj;
         }
     }

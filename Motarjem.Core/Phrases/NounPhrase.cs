@@ -9,7 +9,7 @@ namespace Motarjem.Core.Phrases
         internal static NounPhrase ParseEnglish(Queue<Word[]> words, bool child = false)
         {
             NounPhrase result;
-            switch (words.Peek()[0].pos)
+            switch (words.Peek()[0].Pos)
             {
                 // Det. + Noun e.g. the book
                 case PartsOfSpeech.Determiner:
@@ -25,11 +25,11 @@ namespace Motarjem.Core.Phrases
                     result = Noun.ParseEnglish(words);
                     break;
                 default:
-                    throw new UnexpectedWord(words.Dequeue()[0].english);
+                    throw new UnexpectedWord(words.Dequeue()[0].English);
             }
             // Noun + Conj. + Noun e.g. Ali and Reza
             if (words.Any() &&
-                words.Peek()[0].pos == PartsOfSpeech.Conjunction &&
+                words.Peek()[0].Pos == PartsOfSpeech.Conjunction &&
                 !child)
             {
                 // TODO: Ambigous:

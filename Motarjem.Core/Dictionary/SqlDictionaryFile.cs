@@ -12,149 +12,148 @@ namespace Motarjem.Core.Dictionary
     {
         public SqlDictionaryFile(string path)
         {
-            connection = new SQLiteConnection("DataSource=" + path);
-            context = new DataContext(connection);
-            pronouns_table = context.GetTable<Pronouns>();
-            verbs_table = context.GetTable<Verbs>();
-            conjs_table = context.GetTable<Conjunctions>();
-            dets_table = context.GetTable<Determiners>();
-            adjs_table = context.GetTable<Adjectives>();
-            nouns_table = context.GetTable<Nouns>();
+            _connection = new SQLiteConnection("DataSource=" + path);
+            var context = new DataContext(_connection);
+            _pronounsTable = context.GetTable<Pronouns>();
+            _verbsTable = context.GetTable<Verbs>();
+            _conjsTable = context.GetTable<Conjunctions>();
+            _detsTable = context.GetTable<Determiners>();
+            _adjsTable = context.GetTable<Adjectives>();
+            _nounsTable = context.GetTable<Nouns>();
         }
 
-        private readonly SQLiteConnection connection;
-        private readonly DataContext context;
+        private readonly SQLiteConnection _connection;
 
-        private readonly Table<Pronouns> pronouns_table;
-        private readonly Table<Verbs> verbs_table;
-        private readonly Table<Conjunctions> conjs_table;
-        private readonly Table<Determiners> dets_table;
-        private readonly Table<Adjectives> adjs_table;
-        private readonly Table<Nouns> nouns_table;
+        private readonly Table<Pronouns> _pronounsTable;
+        private readonly Table<Verbs> _verbsTable;
+        private readonly Table<Conjunctions> _conjsTable;
+        private readonly Table<Determiners> _detsTable;
+        private readonly Table<Adjectives> _adjsTable;
+        private readonly Table<Nouns> _nounsTable;
 
         public IEnumerable<Word> Pronouns =>
-            from row in pronouns_table
+            from row in _pronounsTable
             select new Word
             {
-                english = row.English,
-                persian = row.Persian,
-                person = row.Person,
-                count = row.Count,
-                sex = row.Sex,
-                pos = PartsOfSpeech.Pronoun,
+                English = row.English,
+                Persian = row.Persian,
+                Person = (Person) row.Person,
+                Count = (PersonCount) row.Count,
+                Sex = (PersonSex) row.Sex,
+                Pos = PartsOfSpeech.Pronoun,
             };
 
         public IEnumerable<Word> Verbs =>
-            from row in verbs_table
+            from row in _verbsTable
             select new Word
             {
-                english = row.English,
-                persian = row.Persian,
-                persian_2 = row.Persian2,
-                persian_verb_identifier = row.Persian3,
-                pos = row.POS,
-                person = row.Person,
-                count = row.Count,
-                tense = row.Tense,
+                English = row.English,
+                Persian = row.Persian,
+                Persian2 = row.Persian2,
+                PersianVerbIdentifier = row.Persian3,
+                Pos = (PartsOfSpeech) row.Pos,
+                Person = (Person) row.Person,
+                Count = (PersonCount) row.Count,
+                Tense = (VerbTense) row.Tense,
             };
 
         public IEnumerable<Word> Conjs =>
-            from row in conjs_table
+            from row in _conjsTable
             select new Word
             {
-                pos = PartsOfSpeech.Conjunction,
-                english = row.English,
-                persian = row.Persian,
+                Pos = PartsOfSpeech.Conjunction,
+                English = row.English,
+                Persian = row.Persian,
             };
 
         public IEnumerable<Word> Dets =>
-            from row in dets_table
+            from row in _detsTable
             select new Word
             {
-                pos = PartsOfSpeech.Determiner,
-                english = row.English,
-                persian = row.Persian,
-                count = row.Count,
+                Pos = PartsOfSpeech.Determiner,
+                English = row.English,
+                Persian = row.Persian,
+                Count = (PersonCount) row.Count,
             };
 
         public IEnumerable<Word> Adjs =>
-            from row in adjs_table
+            from row in _adjsTable
             select new Word
             {
-                pos = PartsOfSpeech.Adjective,
-                english = row.English,
-                persian = row.Persian,
+                Pos = PartsOfSpeech.Adjective,
+                English = row.English,
+                Persian = row.Persian,
             };
 
         public IEnumerable<Word> Nouns =>
-            from row in nouns_table
+            from row in _nounsTable
             select new Word
             {
-                pos = PartsOfSpeech.Noun,
-                count = PersonCount.Singular,
-                english = row.English,
-                persian = row.Persian,
+                Pos = PartsOfSpeech.Noun,
+                Count = PersonCount.Singular,
+                English = row.English,
+                Persian = row.Persian,
             };
 
         public void Dispose()
         {
-            connection.Close();
-            connection.Dispose();
+            _connection.Close();
+            _connection.Dispose();
         }
     }
 
     namespace Tables
     {
         [Table]
-        class Nouns
+        internal class Nouns
         {
             [Column] public string English;
             [Column] public string Persian;
         }
 
         [Table]
-        class Adjectives
+        internal class Adjectives
         {
             [Column] public string English;
             [Column] public string Persian;
         }
 
         [Table]
-        class Conjunctions
+        internal class Conjunctions
         {
             [Column] public string English;
             [Column] public string Persian;
         }
 
         [Table]
-        class Determiners
+        internal class Determiners
         {
             [Column] public string English;
             [Column] public string Persian;
-            [Column] public PersonCount Count;
+            [Column] public int Count;
         }
 
         [Table]
-        class Pronouns
+        internal class Pronouns
         {
             [Column] public string English;
             [Column] public string Persian;
-            [Column] public Person Person;
-            [Column] public PersonCount Count;
-            [Column] public PersonSex Sex;
+            [Column] public int Person;
+            [Column] public int Count;
+            [Column] public int Sex;
         }
 
         [Table]
-        class Verbs
+        internal class Verbs
         {
             [Column] public string English;
             [Column] public string Persian;
             [Column] public string Persian2;
             [Column] public string Persian3;
-            [Column] public PartsOfSpeech POS;
-            [Column] public Person Person;
-            [Column] public PersonCount Count;
-            [Column] public VerbTense Tense;
+            [Column] public int Pos;
+            [Column] public int Person;
+            [Column] public int Count;
+            [Column] public int Tense;
         }
     }
 }
