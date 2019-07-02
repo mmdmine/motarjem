@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
-using System.Data.SQLite;
 using System.Linq;
+using Mono.Data.Sqlite;
 using Motarjem.Core.Dictionary.Tables;
 
 namespace Motarjem.Core.Dictionary
 {
     public class SqlDictionaryFile : IDictionaryFile, IDisposable
     {
-        private readonly SQLiteConnection _connection;
+        private readonly SqliteConnection _connection;
         
         private readonly Table<Adjectives> _adjsTable;
         private readonly Table<Conjunctions> _conjsTable;
@@ -21,7 +21,9 @@ namespace Motarjem.Core.Dictionary
         
         public SqlDictionaryFile(string path)
         {
-            _connection = new SQLiteConnection("DataSource=" + path);
+            // 'DataSource' or 'Data Source' ?
+            _connection = new SqliteConnection("Data Source=" + path);
+            _connection.Open();
             var context = new DataContext(_connection);
             _pronounsTable = context.GetTable<Pronouns>();
             _verbsTable = context.GetTable<Verbs>();
