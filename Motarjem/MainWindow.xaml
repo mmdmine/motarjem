@@ -3,22 +3,29 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Motarjem"
         mc:Ignorable="d"
         Background="#BBDEFB"
         Title="Motarjem" Height="350" Width="525">
-    <Grid>
+    <Grid Margin="2">
         <Grid.RowDefinitions>
-            <RowDefinition Height="25" />
+            <RowDefinition Height="30" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBox Grid.Row="0"
-                 Name="input" Text="cat and butterflies are happy. I am a program."
-                 Margin="5,2" Background="#E3F2FD" BorderBrush="#90CAF9" />
-        <Button Grid.Row="0" 
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="75" />
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0"
+                Name="input" Text="cat and butterflies are happy. I am a program."
+                 Background="#E3F2FD" BorderBrush="#90CAF9" Padding="2,3"
+                 FontSize="14" />
+            <Button Grid.Column="1"
                 HorizontalAlignment="Right" 
                 Content="Translate" Click="Translate" Cursor="Hand"
-                Margin="5,2" Background="#90CAF9" Foreground="#0D47A1" BorderBrush="#90CAF9" />
+                Background="#90CAF9" Foreground="#0D47A1" BorderBrush="#90CAF9"
+                FontSize="14" Width="75" Padding="2,3" />
+        </Grid>
         <FlowDocumentScrollViewer Grid.Row="1" 
                                   ScrollViewer.VerticalScrollBarVisibility="Auto" 
                                   ScrollViewer.HorizontalScrollBarVisibility="Auto" 
