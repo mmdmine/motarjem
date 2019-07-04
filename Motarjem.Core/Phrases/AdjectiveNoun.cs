@@ -7,7 +7,7 @@ namespace Motarjem.Core.Phrases
     internal class AdjectiveNoun : NounPhrase
     {
         public Word Adjective;
-        public NounPhrase Right;
+        public Nominal Right;
 
         protected override void DisplayEnglish(IDisplay display)
         {
@@ -19,7 +19,14 @@ namespace Motarjem.Core.Phrases
 
         protected override void DisplayPersian(IDisplay display)
         {
-            Right?.Display(display, Language.Persian);
+            if (Right != null)
+            {
+                Right.Display(display, Language.Persian);
+                var noun = Right.Right as Noun;
+                if (noun == null) return;
+                if ("هوا".Contains(noun.Word.Persian.Last()))
+                    display.Print("ی");
+            }
 
             display.Print(Adjective.Persian, FontColor.LightRed);
             display.PrintSpace();
@@ -30,7 +37,7 @@ namespace Motarjem.Core.Phrases
             var adj = new AdjectiveNoun {Adjective = words.Dequeue().First(a => a.Pos == PartsOfSpeech.Adjective)};
             if (words.Any()
                 && words.Peek().Any(a => a.IsNoun))
-                adj.Right = ParseEnglish(words, true);
+                adj.Right = Nominal.ParseEnglish(words);
             return adj;
         }
     }
