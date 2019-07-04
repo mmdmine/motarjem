@@ -10,23 +10,13 @@ namespace Motarjem.Core.Phrases
 
         protected override void DisplayEnglish(IDisplay display)
         {
-            if (Word.Pos == PartsOfSpeech.Pronoun)
-                display.Print(Word.English, FontColor.Blue, FontStyle.Italic);
-            else if (Word.Pos == PartsOfSpeech.ProperNoun)
-                display.Print(Word.English, FontColor.Black, FontStyle.Bold);
-            else
-                display.Print(Word.English);
+            display.Print(Word.English);
             display.PrintSpace();
         }
 
         protected override void DisplayPersian(IDisplay display)
         {
-            if (Word.Pos == PartsOfSpeech.Pronoun)
-                display.Print(Word.Persian, FontColor.Blue, FontStyle.Italic);
-            else if (Word.Pos == PartsOfSpeech.ProperNoun)
-                display.Print(Word.Persian, FontColor.Black, FontStyle.Bold);
-            else
-                display.Print(Word.Persian);
+            display.Print(Word.Persian);
             display.PrintSpace();
         }
 

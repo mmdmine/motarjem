@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Motarjem.Core.Dictionary;
 using Motarjem.Core.Phrases;
 
@@ -12,7 +13,8 @@ namespace Motarjem.Core.Sentences
 
         public override void Display(IDisplay display)
         {
-            _np.Display(display, Language);
+            if (_np != null)
+                _np.Display(display, Language);
             _vp.Display(display, Language);
 
             display.Print(".");
@@ -42,43 +44,61 @@ namespace Motarjem.Core.Sentences
             var sentence = new SimpleSentence
             {
                 Language = Language.English,
-                _np = NounPhrase.ParseEnglish(words)
             };
+            if (words.Peek().Any(w => w.IsNoun))
+                sentence._np = NounPhrase.ParseEnglish(words);
             sentence._vp = VerbPhrase.ParseEnglish(words, FindSubject(sentence._np));
             return sentence;
         }
 
         private static Word FindSubject(NounPhrase np)
         {
+            if (np is ProperNoun)
+                return new Word { Count = PersonCount.Singular, Person = Person.Third };
+
+            var pronoun = np as PronounPhrase;
+            if (pronoun != null)
+                return pronoun.Pronoun;
+
+            var det = np as DeterminerNominal;
+            if (det != null)
+                return FindSubject(det.Right);
+
+            var adj = np as AdjectiveNoun;
+            if (adj != null)
+                return FindSubject(adj.Right);
+
             var noun = np as Noun;
             if (noun != null)
                 return new Word
                 {
                     Count = noun.Word.Count,
-                    Person = noun.Word.Pos == PartsOfSpeech.Pronoun ? noun.Word.Person : Person.Third
+                    Sex = noun.Word.Sex,
+                    Person = Person.Third
                 };
 
-            var dn = np as DeterminerNoun;
-            if (dn != null)
-                // TODO: 'a' or 'an' are singular, 'some' and ... are plural
-                return FindSubject(dn.Right);
-
-            var an = np as AdjectiveNoun;
-            if (an != null)
-                return FindSubject(an.Right);
-
-            var cn = np as ConjNoun;
-            if (cn == null) return null;
-            var subject = new Word
+            var conj = np as ConjNoun;
+            if (conj != null)
             {
-                Count = PersonCount.Plural
-            };
-            var left = FindSubject(cn.Left);
-            var right = FindSubject(cn.Right);
-            if (left.Pos == PartsOfSpeech.Pronoun) subject.Person = left.Person;
-            if (right.Pos == PartsOfSpeech.Pronoun) subject.Person = right.Person;
-            if (subject.Person == Person.All) subject.Person = Person.Third;
-            return subject;
+                var left = FindSubject(conj.Left);
+                var right = FindSubject(conj.Right);
+                // 1st Person:
+                if (left.Person == Person.First ||
+                    right.Person == Person.First)
+                    return new Word { Person = Person.First, Count = PersonCount.Plural };
+                // 2nd Person:
+                if (left.Person == Person.Second ||
+                    right.Person == Person.Second)
+                    return new Word { Person = Person.Second, Count = PersonCount.Plural };
+                // 3rd Person:
+                return new Word { Person = Person.Third, Count = PersonCount.Plural };
+            }
+
+            var nominal = np as Nominal;
+            if (nominal == null)
+                throw new Exception();
+            if (nominal.Left != null) return FindSubject(nominal.Left);
+            return FindSubject(nominal.Right);
         }
     }
 }

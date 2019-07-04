@@ -4,10 +4,10 @@ using Motarjem.Core.Dictionary;
 
 namespace Motarjem.Core.Phrases
 {
-    internal class DeterminerNoun : NounPhrase
+    internal class DeterminerNominal : NounPhrase
     {
         public Word Determiner;
-        public NounPhrase Right;
+        public Nominal Right;
 
         protected override void DisplayEnglish(IDisplay display)
         {
@@ -25,12 +25,12 @@ namespace Motarjem.Core.Phrases
             Right.Display(display, Language.Persian);
         }
 
-        internal static DeterminerNoun ParseEnglish(Queue<Word[]> words)
+        internal static DeterminerNominal ParseEnglish(Queue<Word[]> words)
         {
-            return new DeterminerNoun
+            return new DeterminerNominal
             {
                 Determiner = words.Dequeue().First(a => a.Pos == PartsOfSpeech.Determiner),
-                Right = ParseEnglish(words, true)
+                Right = Nominal.ParseEnglish(words)
             };
         }
     }
