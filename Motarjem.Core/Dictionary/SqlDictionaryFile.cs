@@ -45,19 +45,26 @@ namespace Motarjem.Core.Dictionary
                 Pos = PartsOfSpeech.Pronoun
             };
 
-        public IEnumerable<Word> Verbs =>
-            from row in _verbsTable
-            select new Word
+        public IEnumerable<Word> Verbs
+        {
+            get
             {
-                English = row.English,
-                Persian = row.Persian,
-                Persian2 = row.Persian2,
-                PersianVerbIdentifier = row.Persian3,
-                Pos = (PartsOfSpeech) row.Pos,
-                Person = (Person) row.Person,
-                Count = (PersonCount) row.Count,
-                Tense = (VerbTense) row.Tense
-            };
+                foreach (var row in _verbsTable)
+                {
+                    yield return new Word
+                    {
+                        English = row.English,
+                        Persian = row.Persian,
+                        Persian2 = row.Persian2,
+                        PersianVerbIdentifier = row.Persian3,
+                        Pos = (PartsOfSpeech)row.Pos,
+                        Person = (Person)row.Person,
+                        Count = (PersonCount)row.Count,
+                        Tense = (VerbTense)row.Tense
+                    };
+                }
+            }
+        }
 
         public IEnumerable<Word> Conjunctions =>
             from row in _conjsTable
