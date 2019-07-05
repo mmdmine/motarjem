@@ -2,8 +2,13 @@
 
 namespace Motarjem.Core
 {
+    [Serializable]
     public abstract class MotarjemException : Exception
     {
+        protected MotarjemException()
+        {
+        }
+
         protected MotarjemException(string english, string persian) : base(english)
         {
             MessageFa = persian;
@@ -12,6 +17,7 @@ namespace Motarjem.Core
         public string MessageFa { get; }
     }
 
+    [Serializable]
     internal class UnexpectedEnd : MotarjemException
     {
         public UnexpectedEnd() :
@@ -20,6 +26,7 @@ namespace Motarjem.Core
         }
     }
 
+    [Serializable]
     internal class UnexpectedWord : MotarjemException
     {
         public UnexpectedWord(string word) :
@@ -28,6 +35,7 @@ namespace Motarjem.Core
         }
     }
 
+    [Serializable]
     internal class UndefinedWord : MotarjemException
     {
         public UndefinedWord(string word) :
@@ -36,6 +44,7 @@ namespace Motarjem.Core
         }
     }
 
+    [Serializable]
     internal class GrammarError : MotarjemException
     {
         public GrammarError(string word) :

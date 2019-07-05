@@ -8,7 +8,7 @@ using Motarjem.Core.Dictionary.Tables;
 
 namespace Motarjem.Core.Dictionary
 {
-    public class SqlDictionaryFile : IDictionaryFile, IDisposable
+    public sealed class SqlDictionaryFile : IDictionaryFile, IDisposable
     {
         private readonly SqliteConnection _connection;
         
@@ -101,6 +101,7 @@ namespace Motarjem.Core.Dictionary
         {
             _connection.Close();
             _connection.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 
@@ -109,53 +110,53 @@ namespace Motarjem.Core.Dictionary
         [Table]
         internal class Nouns
         {
-            [Column] public string English;
-            [Column] public string Persian;
+            [Column] public string English = "";
+            [Column] public string Persian = "";
         }
 
         [Table]
         internal class Adjectives
         {
-            [Column] public string English;
-            [Column] public string Persian;
+            [Column] public string English = "";
+            [Column] public string Persian = "";
         }
 
         [Table]
         internal class Conjunctions
         {
-            [Column] public string English;
-            [Column] public string Persian;
+            [Column] public string English = "";
+            [Column] public string Persian = "";
         }
 
         [Table]
         internal class Determiners
         {
-            [Column] public string English;
-            [Column] public string Persian;
-            [Column] public int Count;
+            [Column] public string English = "";
+            [Column] public string Persian = "";
+            [Column] public int Count = 0;
         }
 
         [Table]
         internal class Pronouns
         {
-            [Column] public string English;
-            [Column] public string Persian;
-            [Column] public int Person;
-            [Column] public int Count;
-            [Column] public int Sex;
+            [Column] public string English = "";
+            [Column] public string Persian = "";
+            [Column] public int Person = 0;
+            [Column] public int Count = 0;
+            [Column] public int Sex = 0;
         }
 
         [Table]
         internal class Verbs
         {
-            [Column] public string English;
-            [Column] public string Persian;
-            [Column] public string Persian2;
-            [Column] public string Persian3;
-            [Column] public int Pos;
-            [Column] public int Person;
-            [Column] public int Count;
-            [Column] public int Tense;
+            [Column] public string English = "";
+            [Column] public string Persian = "";
+            [Column] public string Persian2 = "";
+            [Column] public string Persian3 = "";
+            [Column] public int Pos = 0;
+            [Column] public int Person = 0;
+            [Column] public int Count = 0;
+            [Column] public int Tense = 0;
         }
     }
 }
