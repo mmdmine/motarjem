@@ -24,8 +24,8 @@ Motarjem GTK v0.2 beta on Linux
 * Parsing and Translating from Persian
 * Android Support
 
-# Building
-On Windows, You can use "Visual Studio" to build this project.
+# Building on Windows
+You can use "Visual Studio" to build this project.
 
 Also, You can run `MSBuild` from "Developer Command Prompt".
 
@@ -38,25 +38,20 @@ You will need [sqlite3 library](https://www.sqlite.org) to run application.
 You should [download](https://www.sqlite.org/download) it then 
 copy it to the folder containing Motarjem's executable manually.
 
-On Linux, You can build project with mono. Project is compatible with xbuild 14.0.
+# Building on Linux
+Install 'Mono', 'MSBuild', 'NuGet' and 'SQLite'.
 
-First, Install Mono Runtime and NuGet (if you haven't) then
+Building application:
 
 ```
-$ nuget restore
-$ xbuild ./Motarjem.Gtk/Motarjem.Gtk.csproj
+$ msbuild ./Motarjem.Gtk/Motarjem.Gtk.csproj
 ```
 
-then for running application:
+Running application:
 
 ```
 $ mono ./Motarjem.Gtk/bin/Debug/Motarjem.Gtk.exe
 ```
-
-You will need to install `sqlite3` to start application.
-It should be installed already on your system,
-but if you got error, try to install it.
-
 
 # License
 the project is open source and freely can be used for your personal or commerical works,
