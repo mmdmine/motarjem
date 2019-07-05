@@ -45,7 +45,7 @@ namespace Motarjem.Core.Sentences
             {
                 Language = Language.English,
             };
-            if (words.Peek().Any(w => w.IsNoun))
+            if (words.Peek().Any(w => w.IsNoun || w.Pos == PartsOfSpeech.Adjective))
                 sentence._np = NounPhrase.ParseEnglish(words);
             sentence._vp = VerbPhrase.ParseEnglish(words, FindSubject(sentence._np));
             return sentence;
