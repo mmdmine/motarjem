@@ -25,7 +25,11 @@ namespace Motarjem.Core.Phrases
                 var noun = Right.Right as Noun;
                 if (noun == null) return;
                 if ("هوا".Contains(noun.Word.Persian.Last()))
+                {
+                    // TODO: should remove space after Noun
                     display.Print("ی");
+                    display.PrintSpace();
+                }
             }
 
             display.Print(Adjective.Persian, FontColor.LightRed);
