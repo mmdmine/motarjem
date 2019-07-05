@@ -45,7 +45,10 @@ namespace Motarjem.Core.Sentences
             {
                 Language = Language.English,
             };
-            if (words.Peek().Any(w => w.IsNoun || w.Pos == PartsOfSpeech.Adjective))
+            if (words.Peek().Any(w => 
+                                w.IsNoun ||
+                                w.Pos == PartsOfSpeech.Adjective ||
+                                w.Pos == PartsOfSpeech.Determiner))
                 sentence._np = NounPhrase.ParseEnglish(words);
             sentence._vp = VerbPhrase.ParseEnglish(words, FindSubject(sentence._np));
             return sentence;
@@ -53,6 +56,10 @@ namespace Motarjem.Core.Sentences
 
         private static Word FindSubject(NounPhrase np)
         {
+            if (np == null) // It's a command
+                            // TODO: Is it plural or singular?
+                return new Word { Person = Person.Second };
+
             if (np is ProperNoun)
                 return new Word { Count = PersonCount.Singular, Person = Person.Third };
 

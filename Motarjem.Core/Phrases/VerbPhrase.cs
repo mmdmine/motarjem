@@ -83,6 +83,8 @@ namespace Motarjem.Core.Phrases
                             return "م";
                         case Person.Second:
                             return "ی";
+                        case Person.Third:
+                            return "";
                     }
 
                 case PersonCount.Plural:
