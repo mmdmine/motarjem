@@ -7,7 +7,7 @@ namespace Motarjem.Core.Phrases
     internal class DeterminerNominal : NounPhrase
     {
         public Word Determiner;
-        public Nominal Right;
+        public NounPhrase Right;
 
         protected override void DisplayEnglish(IDisplay display)
         {
@@ -30,7 +30,9 @@ namespace Motarjem.Core.Phrases
             return new DeterminerNominal
             {
                 Determiner = words.Dequeue().First(a => a.Pos == PartsOfSpeech.Determiner),
-                Right = Nominal.ParseEnglish(words)
+                Right = words.Peek().Any(w => w.Pos == PartsOfSpeech.Adjective) ? 
+                        (NounPhrase)AdjectiveNoun.ParseEnglish(words) :
+                        Nominal.ParseEnglish(words)
             };
         }
     }
