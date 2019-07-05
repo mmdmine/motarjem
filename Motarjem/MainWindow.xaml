@@ -17,7 +17,7 @@
                 <ColumnDefinition Width="75" />
             </Grid.ColumnDefinitions>
             <TextBox Grid.Column="0"
-                Name="input" Text="cat and butterflies are happy. I am a program."
+                Name="input" Text="the small cat and beauty butterflies are happy. I am a program."
                  Background="#E3F2FD" BorderBrush="#90CAF9" Padding="2,3"
                  FontSize="14" />
             <Button Grid.Column="1"

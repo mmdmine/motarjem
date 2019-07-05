@@ -16,7 +16,7 @@ namespace Motarjem
             DefaultHeight = 300;
 
             // src
-            _src = new Entry {Text = "I am a program."};
+            _src = new Entry {Text = "the small cat and beauty butterflies are happy. I am a program." };
 
             // button
             var button = new Button
