@@ -56,7 +56,8 @@ namespace Motarjem
 
         public void Print(string text, FontColor color = FontColor.Black, FontStyle style = FontStyle.Default)
         {
-            _buffer.InsertWithTags(ref _iter, text, GetColor(color), GetStyle(style), _textSize);
+        	if (!string.IsNullOrWhiteSpace(text))
+            	_buffer.InsertWithTags(ref _iter, text, GetColor(color), GetStyle(style), _textSize);
         }
 
         private static TextTag GetColor(FontColor color)

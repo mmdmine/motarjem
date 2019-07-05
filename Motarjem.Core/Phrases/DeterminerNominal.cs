@@ -19,8 +19,11 @@ namespace Motarjem.Core.Phrases
 
         protected override void DisplayPersian(IDisplay display)
         {
-            display.Print(Determiner.Persian, FontColor.LightBlue);
-            display.PrintSpace();
+            if (!string.IsNullOrWhiteSpace(Determiner.Persian))
+            {
+                display.Print(Determiner.Persian, FontColor.LightBlue);
+                display.PrintSpace();
+            }
 
             Right.Display(display, Language.Persian);
         }
