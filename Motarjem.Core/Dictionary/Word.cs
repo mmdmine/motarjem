@@ -16,7 +16,7 @@ namespace Motarjem.Core.Dictionary
         internal Person Person = Person.All;
         internal PersonCount Count = PersonCount.All;
         internal PersonSex Sex = PersonSex.All;
-        internal PronounType PronounType = PronounType.None; // TODO: Subjective and Objective Pronouns
+        internal PronounType PronounType = PronounType.None;
         internal VerbTense Tense = VerbTense.None;
 
         public bool IsNoun =>
@@ -54,6 +54,22 @@ namespace Motarjem.Core.Dictionary
             if (!matches.Any())
                 throw new UndefinedWord(str.ToString());
             return matches;
+        }
+
+        public Word Clone()
+        {
+            return new Word
+            {
+                English = English,
+                Persian = Persian,
+                Persian2 = Persian2,
+                PersianVerbIdentifier = PersianVerbIdentifier,
+                Pos = Pos,
+                Person = Person,
+                Count = Count,
+                Sex = Sex,
+                Tense = Tense,
+            };
         }
     }
 

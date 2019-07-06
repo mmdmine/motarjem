@@ -4,131 +4,137 @@ using System.Linq;
 
 namespace Motarjem.Core.Dictionary
 {
+    /// <summary>
+    /// English Dictionary that looks up a dictionary file.
+    /// this Dictionary also matches English suffixes/prefixes.
+    /// </summary>
     public class EnglishDictionary : Dictionary
     {
-        private readonly IDictionaryFile _file;
-
-        public EnglishDictionary(IDictionaryFile file)
+        public EnglishDictionary(IDictionaryFile file) :
+            base(file)
         {
-            _file = file;
-        }
-
-        protected override IEnumerable<Word> LookupPronoun(string query)
-        {
-            return from pronoun in _file.Pronouns
-                where pronoun.English.Equals(query, StringComparison.CurrentCultureIgnoreCase)
-                select pronoun;
         }
 
         protected override IEnumerable<Word> LookupVerb(string query)
         {
-            foreach (var verb in
-                from verb in _file.Verbs
-                where verb.English.Equals(query, StringComparison.CurrentCultureIgnoreCase)
-                select verb)
-                yield return verb;
+            var matches = base.LookupVerb(query);
 
             //  Past Verbs
-            if (query.EndsWith("ed"))
-                foreach (var verb in
-                    from verb in _file.Verbs
-                    where verb.English.Equals(query.Substring(0, query.Length - 2))
-                    select verb)
-                {
-                    var result = verb;
-                    result.English = query;
-                    // result.persian = LookupPastFa(verb.persian)
-                    result.Tense = VerbTense.Past;
-                    yield return result;
-                }
-
-            //  Third Person -s ending Verbs
-            var generator = new Func<Word, Word>(verb =>
+            Word GeneratePastVerb(Word verb)
             {
-                var result = verb;
+                var result = verb.Clone();
                 result.English = query;
-                // verb.persian = ?
+                //result.Persian = TODO: Lookup Persian Past Verb
+                result.Tense = VerbTense.Past;
+                return result;
+            }
+
+            // Example:
+            // 1) Started - ed = Start
+            // 2) Lookup(String{Start}) -> Word{Start}
+            // 3) Generate(Word{Start}) -> Word{Started}
+            if (!matches.Any() && query.EndsWith("ed"))
+            {
+                matches.Concat(from verb in base.LookupVerb(query.Substring(0, query.Length - 2))
+                               select GeneratePastVerb(verb));
+            }
+
+            // Simple Present Third Person -s ending Verbs
+            Word GenerateThirdPersonVerb(Word verb)
+            {
+                var result = verb.Clone();
+                result.English = query;
+                // Verbs having -s suffix are for Third Person in Simple Present
                 result.Person = Person.Third;
                 result.Count = PersonCount.Singular;
                 result.Tense = VerbTense.Present;
+
                 result.PersianVerbIdentifier = "د";
                 return result;
-            });
-            if (query.EndsWith("s"))
-                foreach (var verb in
-                    from verb in _file.Verbs
-                    where verb.English.Equals(query.Substring(0, query.Length - 1))
-                    select verb)
-                    yield return generator(verb);
-            if (query.EndsWith("es"))
-                foreach (var verb in
-                    from verb in _file.Verbs
-                    where verb.English.Equals(query.Substring(0, query.Length - 2))
-                    select verb)
-                    yield return generator(verb);
+            }
+
+            // Example:
+            // 1) flies - ies = fl -> fl + y = fly
+            // 2) Lookup(String{fly}) -> Word{fly}
+            // 3) Generate(Word{fly}) -> Word{flies}
             if (query.EndsWith("ies"))
-                foreach (var verb in
-                    from verb in _file.Verbs
-                    where verb.English.Equals(query.Substring(0, query.Length - 3) + "y")
-                    select verb)
-                    yield return generator(verb);
-        }
+            {
+                matches.Concat(
+                    from verb in base.LookupVerb(query.Substring(0, query.Length - 3) + "y")
+                    select GenerateThirdPersonVerb(verb));
+            }
 
-        protected override IEnumerable<Word> LookupConj(string query)
-        {
-            return from conj in _file.Conjunctions
-                where conj.English.Equals(query, StringComparison.CurrentCultureIgnoreCase)
-                select conj;
-        }
+            // 1) Does - es = Do
+            // 2) Lookup(String{do}) -> Word{do}
+            // 3) Generate(Word{do}) -> Word{does}
+            if (!matches.Any() && query.EndsWith("es"))
+            {
+                matches.Concat(
+                    from verb in base.LookupVerb(query.Substring(0, query.Length - 2))
+                    select GenerateThirdPersonVerb(verb));
+            }
 
-        protected override IEnumerable<Word> LookupDet(string query)
-        {
-            return from det in _file.Determiners
-                where det.English.Equals(query, StringComparison.CurrentCultureIgnoreCase)
-                select det;
-        }
+            // 1) Starts - s = Start
+            // 2) Lookup(String{start}) -> Word{start}
+            // 3) Generate(Word{start}) -> Word{starts}
+            if (!matches.Any() && query.EndsWith("s"))
+            {
+                matches.Concat(
+                    from verb in base.LookupVerb(query.Substring(0, query.Length - 1))
+                    select GenerateThirdPersonVerb(verb));
+            }
 
-        protected override IEnumerable<Word> LookupAdj(string query)
-        {
-            return from adj in _file.Adjectives
-                where adj.English.Equals(query, StringComparison.CurrentCultureIgnoreCase)
-                select adj;
+            // TODO: check for re-, de- prefixes
+
+            return matches;
         }
 
         protected override IEnumerable<Word> LookupNoun(string query)
         {
-            foreach (var noun in
-                from noun in _file.Nouns
-                where noun.English.Equals(query, StringComparison.CurrentCultureIgnoreCase)
-                select noun)
-                yield return noun;
-            //  Third Person -s ending Verbs
-            var generator = new Func<Word, Word>(noun =>
+            var matches = base.LookupNoun(query);
+
+            // Plural nouns -s suffix
+            Word GeneratePlural(Word noun)
             {
-                var result = noun;
+                var result = noun.Clone();
                 result.English = query;
-                result.Persian = noun.Persian + "ها";
+                result.Persian = noun.Persian + "ها"; // make persian translation plural
                 result.Count = PersonCount.Plural;
                 return result;
-            });
-            if (query.EndsWith("s"))
-                foreach (var noun in
-                    from noun in _file.Nouns
-                    where noun.English.Equals(query.Substring(0, query.Length - 1))
-                    select noun)
-                    yield return generator(noun);
-            if (query.EndsWith("es"))
-                foreach (var noun in
-                    from noun in _file.Nouns
-                    where noun.English.Equals(query.Substring(0, query.Length - 2))
-                    select noun)
-                    yield return generator(noun);
-            if (query.EndsWith("ies"))
-                foreach (var noun in
-                    from noun in _file.Nouns
-                    where noun.English.Equals(query.Substring(0, query.Length - 3) + "y")
-                    select noun)
-                    yield return generator(noun);
+            }
+
+            // Example:
+            // 1) Flies - ies = Fl -> Fl + y = Fly
+            // 2) Lookup(String{Fly}) -> Word{Fly}
+            // 3) Generate(Word{Fly}) -> Word{Flies}
+            if (!matches.Any() && query.EndsWith("ies"))
+            {
+                matches.Concat(
+                    from noun in base.LookupNoun(query.Substring(0, query.Length - 3) + "y")
+                    select GeneratePlural(noun));
+            }
+            
+            // 1) Matches - es = Match
+            // 2) Lookup(String{Match}) -> Word{Match}
+            // 3) Generate(Word{Match}) -> Word{Matches}
+            if (!matches.Any() && query.EndsWith("es"))
+            {
+                matches.Concat(
+                    from noun in base.LookupNoun(query.Substring(0, query.Length - 2))
+                    select GeneratePlural(noun));
+            }
+            
+            // 1) Cats - s = Cat
+            // 2) Lookup(String{Cat}) -> Word{Cat}
+            // 3) Generate(Word{Cat}) -> Word{Cats}
+            if (!matches.Any() && query.EndsWith("s"))
+            {
+                matches.Concat(
+                    from noun in base.LookupNoun(query.Substring(0, query.Length - 1))
+                    select GeneratePlural(noun));
+            }
+
+            return matches;
         }
     }
 }
