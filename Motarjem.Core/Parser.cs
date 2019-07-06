@@ -11,7 +11,9 @@ namespace Motarjem.Core
             var tokens = new Queue<Token>(Token.Tokenize(text));
             while (tokens.Any())
             {
-                yield return Sentence.ParseEnglish(tokens);
+                var result = Sentence.ParseEnglish(tokens);
+                if (result != null)
+                    yield return result;
             }
         }
     }

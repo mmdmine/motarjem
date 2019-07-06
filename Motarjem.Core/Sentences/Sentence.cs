@@ -28,21 +28,30 @@ namespace Motarjem.Core.Sentences
             switch (tokens.Peek().TokenType)
             {
                 case Token.Type.Dot:
+                    tokens.Dequeue();
                     return ParseEnglish(words);
+
                 case Token.Type.Exclamation:
                     throw new NotImplementedException();
+
                 case Token.Type.QuestionMark:
                     throw new NotImplementedException();
-                
+
                 case Token.Type.Comma:
                 case Token.Type.Undefined:
                     throw new GrammarError(tokens.Dequeue().Character.ToString());
+
                 case Token.Type.Alphabet:
+                    break;
                 case Token.Type.Digit:
+                    break;
+
                 case Token.Type.Space:
-                default:
-                    throw new Exception(); // TODO: Parser Error
+                    tokens.Dequeue();
+                    break;
             }
+
+            return null;
         }
 
         internal static Sentence ParseEnglish(Queue<Word[]> words)
