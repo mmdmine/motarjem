@@ -68,7 +68,6 @@ namespace Motarjem.Core.Dictionary
         //public PronounType PronounType { get; internal set; }
         
         public Person Person { get; internal set; }
-        public PersonCount Count { get; internal set; }
         public PersonSex Sex { get; internal set; }
     }
 
