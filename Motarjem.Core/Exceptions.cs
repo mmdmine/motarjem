@@ -2,6 +2,9 @@
 
 namespace Motarjem.Core
 {
+    /// <summary>
+    /// Errors produced while Parsing and Translating
+    /// </summary>
     [Serializable]
     public abstract class MotarjemException : Exception
     {

@@ -5,11 +5,14 @@ using Motarjem.Core.Dictionary;
 
 namespace Motarjem.Core.Sentences
 {
-    internal class ConjSentence : Sentence
+    /// <summary>
+    /// Two sentence mixed together by Conjunction
+    /// </summary>
+    internal class SentenceMixed : Sentence
     {
-        public Word Conj;
-        public Sentence Left;
-        public Sentence Right;
+        public WordConj Conj { get; internal set; }
+        public Sentence Left { get; internal set; }
+        public Sentence Right { get; internal set; }
 
         public override void Display(IDisplay display)
         {
@@ -26,7 +29,7 @@ namespace Motarjem.Core.Sentences
             switch (Language)
             {
                 case Language.English:
-                    return new ConjSentence
+                    return new SentenceMixed
                     {
                         Language = Language.Persian,
                         Left = Left.Translate(),
@@ -40,12 +43,12 @@ namespace Motarjem.Core.Sentences
             }
         }
 
-        internal static ConjSentence ParseEnglish(Sentence left, Queue<Word[]> words)
+        internal static SentenceMixed ParseEnglish(Sentence left, Queue<Word[]> words)
         {
-            return new ConjSentence
+            return new SentenceMixed
             {
                 Left = left,
-                Conj = words.Dequeue().First(a => a.Pos == PartsOfSpeech.Conjunction),
+                Conj = (WordConj)words.Dequeue().First(word => word is WordConj),
                 Right = ParseEnglish(words)
             };
         }

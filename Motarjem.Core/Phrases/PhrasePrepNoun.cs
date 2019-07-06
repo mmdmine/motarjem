@@ -4,10 +4,10 @@ using System.Linq;
 
 namespace Motarjem.Core.Phrases
 {
-    internal class Preposition : NounPhrase
+    internal class PhrasePrepNoun : NounPhrase
     {
-        public Word Prep;
-        public NounPhrase Right;
+        public WordPrep Prep { get; internal set; }
+        public NounPhrase Right { get; internal set; }
 
         protected override void DisplayEnglish(IDisplay display)
         {
@@ -19,11 +19,11 @@ namespace Motarjem.Core.Phrases
             throw new System.NotImplementedException();
         }
 
-        public static Preposition ParseEnglish(Queue<Word[]> words)
+        public static PhrasePrepNoun ParseEnglish(Queue<Word[]> words)
         {
-            return new Preposition
+            return new PhrasePrepNoun
             {
-                Prep = words.Dequeue().First(w => w.Pos == PartsOfSpeech.Preposition),
+                Prep = (WordPrep)words.Dequeue().First(word => word is WordPrep),
                 Right = NounPhrase.ParseEnglish(words)
             };
         }

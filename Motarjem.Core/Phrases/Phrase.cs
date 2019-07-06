@@ -1,7 +1,11 @@
 ﻿using System;
+using Motarjem.Core.Sentences;
 
 namespace Motarjem.Core.Phrases
 {
+    /// <summary>
+    /// Collection of Words
+    /// </summary>
     public abstract class Phrase
     {
         protected abstract void DisplayEnglish(IDisplay display);
@@ -9,12 +13,17 @@ namespace Motarjem.Core.Phrases
 
         public void Display(IDisplay display, Language lang)
         {
-            if (lang == Language.English)
-                DisplayEnglish(display);
-            else if (lang == Language.Persian)
-                DisplayPersian(display);
-            else
-                throw new ArgumentOutOfRangeException(); // only when language is not set.
+            switch (lang)
+            {
+                case Language.English:
+                    DisplayEnglish(display);
+                    break;
+                case Language.Persian:
+                    DisplayPersian(display);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(); // only when language is not set.
+            }
         }
     }
 }

@@ -1,9 +1,14 @@
-﻿namespace Motarjem.Core.Phrases
+﻿using Motarjem.Core.Sentences;
+
+namespace Motarjem.Core.Phrases
 {
-    internal class SubjectiveVerb : VerbPhrase
+    /// <summary>
+    /// Subjective Sentence: Noun Phrase + [Subjective Phrase: To Be + Noun Phrase]
+    /// </summary>
+    internal class PhraseVerbSubjective : VerbPhrase
     {
-        public NounPhrase Status;
-        public VerbPhrase ToBe;
+        public PhraseVerb ToBe { get; internal set; }
+        public NounPhrase Status { get; internal set; }
 
         protected override void DisplayEnglish(IDisplay display)
         {

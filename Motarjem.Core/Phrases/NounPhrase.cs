@@ -4,6 +4,9 @@ using Motarjem.Core.Dictionary;
 
 namespace Motarjem.Core.Phrases
 {
+    /// <summary>
+    /// a Phrase containing Nouns
+    /// </summary>
     public abstract class NounPhrase : Phrase
     {
         internal static NounPhrase ParseEnglish(Queue<Word[]> words, bool child = false)
@@ -11,16 +14,16 @@ namespace Motarjem.Core.Phrases
             NounPhrase result;
             // Det. + Nominal
             if (words.Peek().Any(w => w.Pos == PartsOfSpeech.Determiner))
-                result = DeterminerNominal.ParseEnglish(words);
+                result = PhraseDet.ParseEnglish(words);
             // Adjective + Noun e.g. small book
             else if (words.Peek().Any(w => w.Pos == PartsOfSpeech.Adjective))
-                result = AdjectiveNoun.ParseEnglish(words);
+                result = PhraseAdjective.ParseEnglish(words);
             // Pronoun
             else if (words.Peek().Any(w => w.Pos == PartsOfSpeech.Pronoun))
-                result = PronounPhrase.ParseEnglish(words);
+                result = PhrasePronoun.ParseEnglish(words);
             // Nominal
             else if (words.Peek().Any(w => w.Pos == PartsOfSpeech.Noun))
-                result = Nominal.ParseEnglish(words);
+                result = PhraseNominal.ParseEnglish(words);
             else // TODO: Proper Noun
                 throw new UnexpectedWord(words.Dequeue()[0].English);
 
@@ -30,7 +33,7 @@ namespace Motarjem.Core.Phrases
                 !child)
                 // TODO: Ambigous:
                 // [Ali wrote [books and letters]] and [Reza read them].
-                result = ConjNoun.ParseEnglish(result, words);
+                result = PhraseConj.ParseEnglish(result, words);
             return result;
         }
     }

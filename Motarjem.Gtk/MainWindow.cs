@@ -1,6 +1,7 @@
 ﻿using System;
 using Gtk;
 using Motarjem.Core;
+using Motarjem.Core.Sentences;
 
 namespace Motarjem
 {
@@ -9,7 +10,7 @@ namespace Motarjem
         private readonly TextDisplay _display;
         private readonly Entry _src;
 
-        public MainWindow() : base("Motarjem")
+        public MainWindow() : base(title: "Motarjem")
         {
             // MainWindow
             DefaultWidth = 600;
@@ -55,7 +56,7 @@ namespace Motarjem
             try
             {
                 _display.Clear();
-                var sentence = Sentence.ParseEnglish(_src.Buffer.Text);
+                var sentence = Parser.Parse(_src.Buffer.Text);
                 foreach (var s in sentence)
                 {
                     s.Display(_display);

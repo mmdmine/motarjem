@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace Motarjem.Core.Phrases
 {
-    internal class PronounPhrase : NounPhrase
+    internal class PhrasePronoun : NounPhrase
     {
-        public Word Pronoun;
+        public WordPronoun Pronoun { get; internal set; }
 
         protected override void DisplayEnglish(IDisplay display)
         {
@@ -20,9 +20,9 @@ namespace Motarjem.Core.Phrases
             display.PrintSpace();
         }
 
-        public static PronounPhrase ParseEnglish(Queue<Word[]> words)
+        public static PhrasePronoun ParseEnglish(Queue<Word[]> words)
         {
-            return new PronounPhrase { Pronoun = words.Dequeue().First(w => w.Pos == PartsOfSpeech.Pronoun) };
+            return new PhrasePronoun { Pronoun = (WordPronoun)words.Dequeue().First(word => word is WordPronoun) };
         }
     }
 }

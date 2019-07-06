@@ -8,6 +8,9 @@ using Motarjem.Core.Dictionary.Tables;
 
 namespace Motarjem.Core.Dictionary
 {
+    /// <summary>
+    /// SQLite Implementation of <see cref="IDictionaryFile"/>
+    /// </summary>
     public sealed class SqlDictionaryFile : IDictionaryFile, IDisposable
     {
         private readonly SqliteConnection _connection;
@@ -19,99 +22,103 @@ namespace Motarjem.Core.Dictionary
         private readonly Table<Pronouns> _pronounsTable;
         private readonly Table<Verbs> _verbsTable;
         
+        /// <summary>
+        /// Open a SQLite database
+        /// </summary>
+        /// <param name="path">Database file path</param>
         public SqlDictionaryFile(string path)
         {
             // 'DataSource' or 'Data Source' ?
             _connection = new SqliteConnection("Data Source=" + path);
             _connection.Open();
+
             var context = new DataContext(_connection);
-            _pronounsTable = context.GetTable<Pronouns>();
-            _verbsTable = context.GetTable<Verbs>();
-            _conjsTable = context.GetTable<Conjunctions>();
-            _detsTable = context.GetTable<Determiners>();
-            _adjsTable = context.GetTable<Adjectives>();
-            _nounsTable = context.GetTable<Nouns>();
+
+            _pronounsTable  = context.GetTable<Pronouns>();
+            _verbsTable     = context.GetTable<Verbs>();
+            _conjsTable     = context.GetTable<Conjunctions>();
+            _detsTable      = context.GetTable<Determiners>();
+            _adjsTable      = context.GetTable<Adjectives>();
+            _nounsTable     = context.GetTable<Nouns>();
         }
 
-        public IEnumerable<Word> Pronouns =>
+        /// <summary>
+        /// Close connection to database and release resources
+        /// </summary>
+        public void Dispose()
+        {
+            _connection.Close();
+            _connection.Dispose();
+        }
+
+        public IEnumerable<WordNoun> Nouns =>
+            from row in _nounsTable
+            select new WordNoun
+            {
+                English = row.English,
+                Persian = row.Persian,
+                Count = PersonCount.Singular
+            };
+
+        public IEnumerable<WordPronoun> Pronouns =>
             from row in _pronounsTable
-            select new Word
+            select new WordPronoun
             {
                 English = row.English,
                 Persian = row.Persian,
                 Person = (Person) row.Person,
                 Count = (PersonCount) row.Count,
-                Sex = (PersonSex) row.Sex,
-                Pos = PartsOfSpeech.Pronoun
+                Sex = (PersonSex) row.Sex
             };
 
-        public IEnumerable<Word> Verbs
-        {
-            get
-            {
-                foreach (var row in _verbsTable)
-                {
-                    yield return new Word
-                    {
-                        English = row.English,
-                        Persian = row.Persian,
-                        Persian2 = row.Persian2,
-                        PersianVerbIdentifier = row.Persian3,
-                        Pos = (PartsOfSpeech)row.Pos,
-                        Person = (Person)row.Person,
-                        Count = (PersonCount)row.Count,
-                        Tense = (VerbTense)row.Tense
-                    };
-                }
-            }
-        }
-
-        public IEnumerable<Word> Conjunctions =>
+        public IEnumerable<WordConj> Conjunctions =>
             from row in _conjsTable
-            select new Word
+            select new WordConj
             {
-                Pos = PartsOfSpeech.Conjunction,
                 English = row.English,
                 Persian = row.Persian
             };
 
-        public IEnumerable<Word> Determiners =>
+        public IEnumerable<WordDet> Determiners =>
             from row in _detsTable
-            select new Word
+            select new WordDet
             {
-                Pos = PartsOfSpeech.Determiner,
                 English = row.English,
                 Persian = row.Persian,
                 Count = (PersonCount) row.Count
             };
 
-        public IEnumerable<Word> Adjectives =>
+        public IEnumerable<WordAdj> Adjectives =>
             from row in _adjsTable
-            select new Word
+            select new WordAdj
             {
-                Pos = PartsOfSpeech.Adjective,
                 English = row.English,
                 Persian = row.Persian
             };
 
-        public IEnumerable<Word> Nouns =>
-            from row in _nounsTable
-            select new Word
-            {
-                Pos = PartsOfSpeech.Noun,
-                Count = PersonCount.Singular,
-                English = row.English,
-                Persian = row.Persian
-            };
-
-        public void Dispose()
+        public IEnumerable<WordVerb> Verbs
         {
-            _connection.Close();
-            _connection.Dispose();
-            GC.SuppressFinalize(this);
+            get
+            {
+                foreach (var row in _verbsTable)
+                {
+                    yield return new WordVerb
+                    {
+                        English = row.English,
+                        Persian = row.Persian,
+                        Persian2 = row.Persian2,
+                        PersianVerbIdentifier = row.Persian3,
+                        Person = (Person)row.Person,
+                        Count = (PersonCount)row.Count,
+                        VerbType = (VerbType)row.VerbType,
+                        Tense = (VerbTense)row.Tense
+                    };
+                }
+            }
         }
     }
-
+    
+    // Definition of Tables used in SQLite Database file
     namespace Tables
     {
         [Table]
@@ -119,6 +126,16 @@ namespace Motarjem.Core.Dictionary
         {
             [Column] public string English = "";
             [Column] public string Persian = "";
+        }
+
+        [Table]
+        internal class Pronouns
+        {
+            [Column] public string English = "";
+            [Column] public string Persian = "";
+            [Column] public int Person;
+            [Column] public int Count;
+            [Column] public int Sex;
         }
 
         [Table]
@@ -140,17 +157,7 @@ namespace Motarjem.Core.Dictionary
         {
             [Column] public string English = "";
             [Column] public string Persian = "";
-            [Column] public int Count = 0;
-        }
-
-        [Table]
-        internal class Pronouns
-        {
-            [Column] public string English = "";
-            [Column] public string Persian = "";
-            [Column] public int Person = 0;
-            [Column] public int Count = 0;
-            [Column] public int Sex = 0;
+            [Column] public int Count;
         }
 
         [Table]
@@ -160,10 +167,10 @@ namespace Motarjem.Core.Dictionary
             [Column] public string Persian = "";
             [Column] public string Persian2 = "";
             [Column] public string Persian3 = "";
-            [Column] public int Pos = 0;
-            [Column] public int Person = 0;
-            [Column] public int Count = 0;
-            [Column] public int Tense = 0;
+            [Column] public int Person;
+            [Column] public int Count;
+            [Column] public int VerbType;
+            [Column] public int Tense;
         }
     }
 }

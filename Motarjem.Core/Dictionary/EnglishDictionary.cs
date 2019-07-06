@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Motarjem.Core.Dictionary
@@ -8,19 +7,19 @@ namespace Motarjem.Core.Dictionary
     /// English Dictionary that looks up a dictionary file.
     /// this Dictionary also matches English suffixes/prefixes.
     /// </summary>
-    public class EnglishDictionary : Dictionary
+    internal class EnglishDictionary : Dictionary
     {
         public EnglishDictionary(IDictionaryFile file) :
             base(file)
         {
         }
 
-        protected override IEnumerable<Word> LookupVerb(string query)
+        protected override IEnumerable<WordVerb> LookupVerb(string query)
         {
             var matches = base.LookupVerb(query);
 
             //  Past Verbs
-            Word GeneratePastVerb(Word verb)
+            WordVerb GeneratePastVerb(WordVerb verb)
             {
                 var result = verb.Clone();
                 result.English = query;
@@ -33,14 +32,14 @@ namespace Motarjem.Core.Dictionary
             // 1) Started - ed = Start
             // 2) Lookup(String{Start}) -> Word{Start}
             // 3) Generate(Word{Start}) -> Word{Started}
-            if (!matches.Any() && query.EndsWith("ed"))
+            if (query.EndsWith("ed"))
             {
-                matches.Concat(from verb in base.LookupVerb(query.Substring(0, query.Length - 2))
+                matches = matches.Concat(from verb in base.LookupVerb(query.Substring(0, query.Length - 2))
                                select GeneratePastVerb(verb));
             }
 
             // Simple Present Third Person -s ending Verbs
-            Word GenerateThirdPersonVerb(Word verb)
+            WordVerb GenerateThirdPersonVerb(WordVerb verb)
             {
                 var result = verb.Clone();
                 result.English = query;
@@ -59,7 +58,7 @@ namespace Motarjem.Core.Dictionary
             // 3) Generate(Word{fly}) -> Word{flies}
             if (query.EndsWith("ies"))
             {
-                matches.Concat(
+                matches = matches.Concat(
                     from verb in base.LookupVerb(query.Substring(0, query.Length - 3) + "y")
                     select GenerateThirdPersonVerb(verb));
             }
@@ -67,9 +66,9 @@ namespace Motarjem.Core.Dictionary
             // 1) Does - es = Do
             // 2) Lookup(String{do}) -> Word{do}
             // 3) Generate(Word{do}) -> Word{does}
-            if (!matches.Any() && query.EndsWith("es"))
+            if (query.EndsWith("es"))
             {
-                matches.Concat(
+                matches = matches.Concat(
                     from verb in base.LookupVerb(query.Substring(0, query.Length - 2))
                     select GenerateThirdPersonVerb(verb));
             }
@@ -77,9 +76,9 @@ namespace Motarjem.Core.Dictionary
             // 1) Starts - s = Start
             // 2) Lookup(String{start}) -> Word{start}
             // 3) Generate(Word{start}) -> Word{starts}
-            if (!matches.Any() && query.EndsWith("s"))
+            if (query.EndsWith("s"))
             {
-                matches.Concat(
+                matches = matches.Concat(
                     from verb in base.LookupVerb(query.Substring(0, query.Length - 1))
                     select GenerateThirdPersonVerb(verb));
             }
@@ -89,12 +88,12 @@ namespace Motarjem.Core.Dictionary
             return matches;
         }
 
-        protected override IEnumerable<Word> LookupNoun(string query)
+        protected override IEnumerable<WordNoun> LookupNoun(string query)
         {
             var matches = base.LookupNoun(query);
 
             // Plural nouns -s suffix
-            Word GeneratePlural(Word noun)
+            WordNoun GeneratePlural(WordNoun noun)
             {
                 var result = noun.Clone();
                 result.English = query;
@@ -107,9 +106,9 @@ namespace Motarjem.Core.Dictionary
             // 1) Flies - ies = Fl -> Fl + y = Fly
             // 2) Lookup(String{Fly}) -> Word{Fly}
             // 3) Generate(Word{Fly}) -> Word{Flies}
-            if (!matches.Any() && query.EndsWith("ies"))
+            if (query.EndsWith("ies"))
             {
-                matches.Concat(
+                matches = matches.Concat(
                     from noun in base.LookupNoun(query.Substring(0, query.Length - 3) + "y")
                     select GeneratePlural(noun));
             }
@@ -117,9 +116,9 @@ namespace Motarjem.Core.Dictionary
             // 1) Matches - es = Match
             // 2) Lookup(String{Match}) -> Word{Match}
             // 3) Generate(Word{Match}) -> Word{Matches}
-            if (!matches.Any() && query.EndsWith("es"))
+            if (query.EndsWith("es"))
             {
-                matches.Concat(
+                matches = matches.Concat(
                     from noun in base.LookupNoun(query.Substring(0, query.Length - 2))
                     select GeneratePlural(noun));
             }
@@ -127,9 +126,9 @@ namespace Motarjem.Core.Dictionary
             // 1) Cats - s = Cat
             // 2) Lookup(String{Cat}) -> Word{Cat}
             // 3) Generate(Word{Cat}) -> Word{Cats}
-            if (!matches.Any() && query.EndsWith("s"))
+            if (query.EndsWith("s"))
             {
-                matches.Concat(
+                matches = matches.Concat(
                     from noun in base.LookupNoun(query.Substring(0, query.Length - 1))
                     select GeneratePlural(noun));
             }

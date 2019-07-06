@@ -8,7 +8,7 @@ namespace Motarjem.Core.Dictionary
     /// Abstract Dictionary Class that
     /// contains methods for looking up a word in dictionary
     /// </summary>
-    public abstract class Dictionary
+    internal abstract class Dictionary
     {
         private readonly IDictionaryFile _file;
 
@@ -37,7 +37,7 @@ namespace Motarjem.Core.Dictionary
             return matches;
         }
 
-        // Lookup methods splited because 
+        // Lookup methods split because 
         // the Database contains different tables
         // for each POS.
 
@@ -46,13 +46,11 @@ namespace Motarjem.Core.Dictionary
         /// </summary>
         /// <param name="query">word to be query</param>
         /// <returns>Enumerable of matches</returns>
-        protected virtual IEnumerable<Word> LookupNoun(string query)
+        protected virtual IEnumerable<WordNoun> LookupNoun(string query)
         {
-            foreach (var noun in
-                from noun in _file.Nouns
+            return from noun in _file.Nouns
                 where noun.English.Equals(query, StringComparison.CurrentCultureIgnoreCase)
-                select noun)
-                yield return noun;
+                select noun;
         }
 
         /// <summary>
@@ -60,9 +58,9 @@ namespace Motarjem.Core.Dictionary
         /// </summary>
         /// <param name="query">Adj. to be queried</param>
         /// <returns>Enumerable of matches</returns>
-        protected virtual IEnumerable<Word> LookupAdj(string query)
+        protected virtual IEnumerable<WordAdj> LookupAdj(string query)
         {
-            return from det in _file.Determiners
+            return from det in _file.Adjectives
                    where det.English.Equals(query, StringComparison.CurrentCultureIgnoreCase)
                    select det;
         }
@@ -72,9 +70,9 @@ namespace Motarjem.Core.Dictionary
         /// </summary>
         /// <param name="query">Det. to be queried</param>
         /// <returns>Enumerable of matches</returns>
-        protected virtual IEnumerable<Word> LookupDet(string query)
+        protected virtual IEnumerable<WordDet> LookupDet(string query)
         {
-            return from adj in _file.Adjectives
+            return from adj in _file.Determiners
                    where adj.English.Equals(query, StringComparison.CurrentCultureIgnoreCase)
                    select adj;
         }
@@ -84,7 +82,7 @@ namespace Motarjem.Core.Dictionary
         /// </summary>
         /// <param name="query">Conj. to be queried</param>
         /// <returns>Enumerable of matches</returns>
-        protected virtual IEnumerable<Word> LookupConj(string query)
+        protected virtual IEnumerable<WordConj> LookupConj(string query)
         {
             return from conj in _file.Conjunctions
                    where conj.English.Equals(query, StringComparison.CurrentCultureIgnoreCase)
@@ -96,13 +94,11 @@ namespace Motarjem.Core.Dictionary
         /// </summary>
         /// <param name="query">verb to be queried</param>
         /// <returns>Enumerable of matches</returns>
-        protected virtual IEnumerable<Word> LookupVerb(string query)
+        protected virtual IEnumerable<WordVerb> LookupVerb(string query)
         {
-            foreach (var verb in
-                from verb in _file.Verbs
+            return from verb in _file.Verbs
                 where verb.English.Equals(query, StringComparison.CurrentCultureIgnoreCase)
-                select verb)
-                yield return verb;
+                select verb;
         }
 
         /// <summary>

@@ -4,27 +4,27 @@ using Motarjem.Core.Dictionary;
 
 namespace Motarjem.Core.Phrases
 {
-    internal class Noun : NounPhrase
+    internal class PhraseNoun : NounPhrase
     {
-        public Word Word;
+        public WordNoun Noun;
 
         protected override void DisplayEnglish(IDisplay display)
         {
-            display.Print(Word.English);
+            display.Print(Noun.English);
             display.PrintSpace();
         }
 
         protected override void DisplayPersian(IDisplay display)
         {
-            display.Print(Word.Persian);
+            display.Print(Noun.Persian);
             display.PrintSpace();
         }
 
-        internal static Noun ParseEnglish(Queue<Word[]> words)
+        internal static PhraseNoun ParseEnglish(Queue<Word[]> words)
         {
-            return new Noun
+            return new PhraseNoun
             {
-                Word = words.Dequeue().First(a => a.IsNoun)
+                Noun = (WordNoun)words.Dequeue().First(a => a is WordNoun)
             };
         }
     }

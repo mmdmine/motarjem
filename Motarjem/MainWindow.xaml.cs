@@ -23,8 +23,8 @@ namespace Motarjem
         public MainWindow()
         {
             InitializeComponent();
-            en_display = new Display(en.Inlines);
-            fa_display = new Display(fa.Inlines);
+            en_display = new FlowDocumentDisplay(en.Inlines);
+            fa_display = new FlowDocumentDisplay(fa.Inlines);
         }
 
         private void Translate(object sender, RoutedEventArgs e)
@@ -33,7 +33,7 @@ namespace Motarjem
             {
                 en_display.Clear();
                 fa_display.Clear();
-                foreach (var s in Sentence.ParseEnglish(input.Text))
+                foreach (var s in Parser.Parse(input.Text))
                 {
                     s.Display(en_display);
                     s.Translate().Display(fa_display);
@@ -56,7 +56,7 @@ namespace Motarjem
 #endif
         }
 
-        private Display en_display;
-        private Display fa_display;
+        private FlowDocumentDisplay en_display;
+        private FlowDocumentDisplay fa_display;
     }
 }

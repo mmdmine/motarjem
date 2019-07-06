@@ -4,31 +4,18 @@ using System.Text;
 
 namespace Motarjem.Core.Dictionary
 {
-    public class Word
+    public abstract class Word
     {
-        private static EnglishDictionary _dictionary;
+        public abstract PartsOfSpeech Pos { get; }
+        public string English { get; internal set; }
+        public string Persian { get; internal set; }
         
-        internal string English = "";
-        internal string Persian = "";
-        internal string Persian2 = "";
-        internal string PersianVerbIdentifier = "";
-        internal PartsOfSpeech Pos = PartsOfSpeech.Noun;
-        internal Person Person = Person.All;
-        internal PersonCount Count = PersonCount.All;
-        internal PersonSex Sex = PersonSex.All;
-        internal PronounType PronounType = PronounType.None;
-        internal VerbTense Tense = VerbTense.None;
+        private static EnglishDictionary _dictionary;
 
-        public bool IsNoun =>
-            Pos == PartsOfSpeech.Noun ||
-            Pos == PartsOfSpeech.Pronoun ||
-            Pos == PartsOfSpeech.ProperNoun;
-
-        public bool IsVerb =>
-            Pos == PartsOfSpeech.Verb ||
-            Pos == PartsOfSpeech.AuxiliaryVerb ||
-            Pos == PartsOfSpeech.ToBe;
-
+        /// <summary>
+        /// Open a Dictionary File to be used in Parsing Words
+        /// </summary>
+        /// <param name="file">the Dictionary File to be opened</param>
         public static void OpenDictionary(IDictionaryFile file)
         {
             _dictionary = new EnglishDictionary(file);
@@ -55,32 +42,108 @@ namespace Motarjem.Core.Dictionary
                 throw new UndefinedWord(str.ToString());
             return matches;
         }
+    }
 
-        public Word Clone()
+    public class WordNoun : Word
+    {
+        public override PartsOfSpeech Pos => PartsOfSpeech.Noun;
+        
+        public PersonCount Count { get; internal set; }
+        
+        public WordNoun Clone()
         {
-            return new Word
+            return new WordNoun
+            {
+                English = English,
+                Persian = Persian,
+                Count = Count
+            };
+        }
+    }
+    
+    public sealed class WordPronoun : WordNoun
+    {
+        public override PartsOfSpeech Pos => PartsOfSpeech.Pronoun;
+        
+        //public PronounType PronounType { get; internal set; }
+        
+        public Person Person { get; internal set; }
+        public PersonCount Count { get; internal set; }
+        public PersonSex Sex { get; internal set; }
+    }
+
+    public sealed class ProperNounWord : WordNoun
+    {
+        public override PartsOfSpeech Pos => PartsOfSpeech.ProperNoun;
+    }
+
+    public class WordVerb : Word
+    {
+        public override PartsOfSpeech Pos => PartsOfSpeech.Verb;
+        
+        public string Persian2 { get; internal set; }
+        public string PersianVerbIdentifier { get; internal set; }
+        
+        public Person Person { get; internal set; }
+        public PersonCount Count { get; internal set; }
+        public PersonSex Sex { get; internal set; }
+        
+        public VerbType VerbType { get; internal set; }
+        public VerbTense Tense { get; internal set; }
+
+        public WordVerb Clone()
+        {
+            return new WordVerb
             {
                 English = English,
                 Persian = Persian,
                 Persian2 = Persian2,
                 PersianVerbIdentifier = PersianVerbIdentifier,
-                Pos = Pos,
                 Person = Person,
                 Count = Count,
                 Sex = Sex,
-                Tense = Tense,
+                VerbType = VerbType,
+                Tense = Tense
             };
         }
     }
 
-    internal enum PartsOfSpeech
+    public sealed class WordAdj : Word
+    {
+        public override PartsOfSpeech Pos => PartsOfSpeech.Adjective;
+    }
+
+    public sealed class WordConj : Word
+    {
+        public override PartsOfSpeech Pos => PartsOfSpeech.Conjunction;
+    }
+
+    public sealed class WordDet : Word
+    {
+        public override PartsOfSpeech Pos => PartsOfSpeech.Determiner;
+
+        public PersonCount Count { get; internal set; }
+    }
+
+    /// <summary>
+    /// Preposition
+    /// </summary>
+    public sealed class WordPrep : Word
+    {
+        public override PartsOfSpeech Pos => PartsOfSpeech.Preposition;
+    }
+
+    public sealed class WordProperNoun : Word
+    {
+        public override PartsOfSpeech Pos => PartsOfSpeech.ProperNoun;
+    }
+
+    public enum PartsOfSpeech
     {
         Noun,
         Pronoun,
         ProperNoun,
         Verb,
-        AuxiliaryVerb,
-        ToBe,
         Adjective,
         Adverb,
         Conjunction,
@@ -89,7 +152,7 @@ namespace Motarjem.Core.Dictionary
         Number
     }
 
-    internal enum Person
+    public enum Person
     {
         All,
         First,
@@ -97,21 +160,28 @@ namespace Motarjem.Core.Dictionary
         Third
     }
 
-    internal enum PersonCount
+    public enum PersonCount
     {
         All,
         Singular,
         Plural
     }
 
-    internal enum PersonSex
+    public enum PersonSex
     {
         All,
         Male,
         Female
     }
 
-    internal enum VerbTense
+    public enum VerbType
+    {
+        Action,
+        ToBe,
+        Auxiliary,
+    }
+
+    public enum VerbTense
     {
         None,
         Present,
@@ -119,7 +189,7 @@ namespace Motarjem.Core.Dictionary
         PastParticiple
     }
 
-    internal enum PronounType
+    public enum PronounType
     {
         None,
         Subjective,

@@ -1,13 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Motarjem.Core.Dictionary;
+using Motarjem.Core.Sentences;
 
 namespace Motarjem.Core.Phrases
 {
-    internal class DeterminerNominal : NounPhrase
+    /// <summary>
+    /// Determiner Noun Phrase used in Nominal Phrase
+    /// </summary>
+    internal class PhraseDet : NounPhrase
     {
-        public Word Determiner;
-        public NounPhrase Right;
+        public WordDet Determiner { get; internal set; }
+        public NounPhrase Right { get; internal set; }
 
         protected override void DisplayEnglish(IDisplay display)
         {
@@ -28,14 +32,14 @@ namespace Motarjem.Core.Phrases
             Right.Display(display, Language.Persian);
         }
 
-        internal static DeterminerNominal ParseEnglish(Queue<Word[]> words)
+        internal static PhraseDet ParseEnglish(Queue<Word[]> words)
         {
-            return new DeterminerNominal
+            return new PhraseDet
             {
-                Determiner = words.Dequeue().First(a => a.Pos == PartsOfSpeech.Determiner),
+                Determiner = (WordDet)words.Dequeue().First(word => word is WordDet),
                 Right = words.Peek().Any(w => w.Pos == PartsOfSpeech.Adjective) ? 
-                        (NounPhrase)AdjectiveNoun.ParseEnglish(words) :
-                        Nominal.ParseEnglish(words)
+                        (NounPhrase)PhraseAdjective.ParseEnglish(words) :
+                        PhraseNominal.ParseEnglish(words)
             };
         }
     }

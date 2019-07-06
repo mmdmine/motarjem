@@ -5,7 +5,7 @@ using System.Windows.Documents;
 
 namespace Motarjem
 {
-    class Display : IDisplay
+    class FlowDocumentDisplay : IDisplay
     {
         private InlineCollection _inlines;
 
@@ -20,7 +20,7 @@ namespace Motarjem
         private static readonly Brush BA700 = new SolidColorBrush(Color.FromRgb(0x00, 0x91, 0xEA));
 
 
-        public Display(InlineCollection inlines)
+        public FlowDocumentDisplay(InlineCollection inlines)
         {
             _inlines = inlines;
         }
