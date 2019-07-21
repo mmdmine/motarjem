@@ -1,6 +1,7 @@
-# Motarjem
+# Motarjem (Discontinued)
 Motarjem is an offline translator that uses Natural Language Processing 
 to parse and translate English sentences to Persian.
+Project development cancelled incompletely for a lot of reasons and problems.
 
 # Screenshots
 Motarjem v0.2 beta on Windows
